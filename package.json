@@ -1,0 +1,21 @@
+{
+  "name": "social-media-analytics-tool",
+  "version": "1.0.0",
+  "description": "Social media analytics tool with Supabase backend",
+  "private": true,
+  "workspaces": [
+    "api",
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev --workspace=api\" \"npm run dev --workspace=frontend\"",
+    "build": "npm run build --workspace=api && npm run build --workspace=frontend",
+    "install:all": "npm install && npm install --workspace=api && npm install --workspace=frontend"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "overrides": {
+    "esbuild": "^0.19.0"
+  }
+}
