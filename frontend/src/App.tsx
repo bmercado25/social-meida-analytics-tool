@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { apiClient } from './config/api';
 import { DataTable } from './components/DataTable';
+import { VideoEmbeddingsEditor } from './components/VideoEmbeddingsEditor';
 
 interface YouTubeVideo {
   id: string;
@@ -28,6 +29,7 @@ function App() {
     message: string;
     rowCount?: number;
   } | null>(null);
+  const [selectedVideo, setSelectedVideo] = useState<YouTubeVideo | null>(null);
 
   useEffect(() => {
     testConnection();
@@ -196,11 +198,9 @@ function App() {
             data={data}
             tableName="youtube_videos"
             onActionClick={(row) => {
-              console.log('Action clicked for video:', row);
-              // Action handler will be implemented later
-              alert(`Action clicked for: ${row.title || row.video_id}`);
+              setSelectedVideo(row);
             }}
-            actionLabel="Actions"
+            actionLabel="Edit Embeddings"
           />
         </div>
       )}
@@ -209,6 +209,19 @@ function App() {
         <h3>API Health Check</h3>
         <HealthCheck />
       </div>
+
+      {selectedVideo && (
+        <VideoEmbeddingsEditor
+          videoId={selectedVideo.video_id}
+          videoTitle={selectedVideo.title}
+          videoData={selectedVideo}
+          onClose={() => setSelectedVideo(null)}
+          onUpdate={() => {
+            // Optionally refresh data or show a success message
+            console.log('Embedding updated for video:', selectedVideo.video_id);
+          }}
+        />
+      )}
     </div>
   );
 }
