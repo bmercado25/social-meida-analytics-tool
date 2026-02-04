@@ -4,6 +4,7 @@ import { env } from './config/env.js';
 import analyticsRoutes from './routes/analytics.routes.js';
 import healthRoutes from './routes/health.routes.js';
 import testRoutes from './routes/test.routes.js';
+import youtubeRoutes from './routes/youtube.routes.js';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware.js';
 
 const app: Express = express();
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/health', healthRoutes);
 app.use('/api', testRoutes); // /api/test-connection
 app.use('/api/analytics', analyticsRoutes);
+app.use('/api/youtube', youtubeRoutes);
 
 // Error handling
 app.use(notFoundHandler);

@@ -9,6 +9,7 @@ const envSchema = z.object({
   SUPABASE_URL: z.string().url(),
   SUPABASE_ANON_KEY: z.string().min(1),
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(1), // Required for server-side operations
+  YOUTUBE_API_KEY: z.string().min(1), // YouTube Data API v3 key
 });
 
 export const env = envSchema.parse(process.env);
