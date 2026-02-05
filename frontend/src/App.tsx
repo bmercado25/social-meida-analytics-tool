@@ -5,6 +5,7 @@ import { VideoEmbeddingsEditor } from './components/VideoEmbeddingsEditor';
 import { VideoDetailView } from './components/VideoDetailView';
 import { AnalyticsDashboard } from './components/AnalyticsDashboard';
 import { PromptAssistant } from './components/PromptAssistant';
+import { PendingEmbeddings } from './components/PendingEmbeddings';
 
 interface YouTubeVideo {
   id: string;
@@ -34,7 +35,7 @@ function App() {
   } | null>(null);
   const [selectedVideo, setSelectedVideo] = useState<YouTubeVideo | null>(null);
   const [detailVideo, setDetailVideo] = useState<YouTubeVideo | null>(null);
-  const [activeTab, setActiveTab] = useState<'table' | 'analytics' | 'prompt'>('table');
+  const [activeTab, setActiveTab] = useState<'table' | 'analytics' | 'prompt' | 'pending'>('table');
 
   useEffect(() => {
     testConnection();
@@ -135,7 +136,7 @@ function App() {
             fontWeight: 600,
           }}
         >
-          {retrieving ? 'Retrieving...' : '📥 Retrieve Shorts'}
+          {retrieving ? 'Retrieving...' : 'Retrieve Shorts'}
         </button>
         <button
           onClick={fetchVideos}
@@ -149,7 +150,7 @@ function App() {
             cursor: loading ? 'not-allowed' : 'pointer',
           }}
         >
-          {loading ? 'Loading...' : '🔄 Refresh Table'}
+          {loading ? 'Loading...' : 'Refresh Table'}
         </button>
         <button
           onClick={testConnection}
@@ -220,7 +221,7 @@ function App() {
             marginBottom: '-2px',
           }}
         >
-          📊 Table View
+          Table View
         </button>
         <button
           onClick={() => setActiveTab('analytics')}
@@ -237,7 +238,7 @@ function App() {
             marginBottom: '-2px',
           }}
         >
-          📈 Analytics Dashboard
+          Analytics Dashboard
         </button>
         <button
           onClick={() => setActiveTab('prompt')}
@@ -254,7 +255,24 @@ function App() {
             marginBottom: '-2px',
           }}
         >
-          ✨ Prompt Assistant
+          Prompt Assistant
+        </button>
+        <button
+          onClick={() => setActiveTab('pending')}
+          style={{
+            padding: '0.75rem 1.5rem',
+            backgroundColor: 'transparent',
+            color: activeTab === 'pending' ? '#58a6ff' : '#8b949e',
+            border: 'none',
+            borderBottom: activeTab === 'pending' ? '3px solid #58a6ff' : '3px solid transparent',
+            cursor: 'pointer',
+            fontSize: '1rem',
+            fontWeight: activeTab === 'pending' ? 600 : 400,
+            transition: 'all 0.2s',
+            marginBottom: '-2px',
+          }}
+        >
+          📝 Pending Scripts
         </button>
       </div>
 
@@ -285,6 +303,10 @@ function App() {
 
           {activeTab === 'prompt' && (
             <PromptAssistant videos={data} />
+          )}
+
+          {activeTab === 'pending' && (
+            <PendingEmbeddings />
           )}
         </>
       )}

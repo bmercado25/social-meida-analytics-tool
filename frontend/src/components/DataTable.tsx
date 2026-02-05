@@ -275,7 +275,7 @@ export const DataTable: React.FC<DataTableProps> = ({
             gap: '0.5rem',
           }}
         >
-          <span>🔽</span> Column Filter
+          Column Filter
         </button>
 
         {/* Filter Dropdown */}
@@ -520,7 +520,7 @@ export const DataTable: React.FC<DataTableProps> = ({
                       e.currentTarget.style.backgroundColor = '#238636';
                     }}
                   >
-                    Actions
+                    Edit/Add
                   </button>
                 </td>
               )}

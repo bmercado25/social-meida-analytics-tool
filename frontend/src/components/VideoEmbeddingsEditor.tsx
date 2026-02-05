@@ -39,6 +39,12 @@ export const VideoEmbeddingsEditor: React.FC<VideoEmbeddingsEditorProps> = ({
   const [jsonData, setJsonData] = useState<any>(null);
   const [jsonLoading, setJsonLoading] = useState(false);
   const [jsonError, setJsonError] = useState<string | null>(null);
+  const [embeddingExists, setEmbeddingExists] = useState<boolean>(false);
+  const [unassignedEmbeddings, setUnassignedEmbeddings] = useState<any[]>([]);
+  const [showLinkOptions, setShowLinkOptions] = useState(false);
+  const [showAssignmentModal, setShowAssignmentModal] = useState(false);
+  const [selectedUnassignedId, setSelectedUnassignedId] = useState<string>('');
+  const [linking, setLinking] = useState(false);
   const [formData, setFormData] = useState<VideoEmbedding>({
     video_id: videoId,
     topic: null,
@@ -60,17 +66,79 @@ export const VideoEmbeddingsEditor: React.FC<VideoEmbeddingsEditorProps> = ({
     try {
       setLoading(true);
       setError(null);
+      
+      // First check if embedding exists (without creating)
+      const checkResponse = await apiClient.get(`/api/youtube/embeddings/${videoId}/check`);
+      
+      if (checkResponse.data.exists && checkResponse.data.data) {
+        // Embedding exists, fetch full data
+        const response = await apiClient.get(`/api/youtube/embeddings/${videoId}`);
+        if (response.data.data) {
+          setFormData(response.data.data);
+          setEmbeddingExists(true);
+          setShowAssignmentModal(false);
+        }
+      } else {
+        // No embedding exists, check for pending scripts to show modal
+        setEmbeddingExists(false);
+        try {
+          const unassignedRes = await apiClient.get('/api/youtube/embeddings/unassigned/list');
+          setUnassignedEmbeddings(unassignedRes.data.data || []);
+          // Show assignment modal if there are unassigned embeddings
+          if (unassignedRes.data.data && unassignedRes.data.data.length > 0) {
+            setShowAssignmentModal(true);
+          } else {
+            // No unassigned embeddings, proceed directly to create new
+            setShowAssignmentModal(false);
+          }
+        } catch (fetchErr) {
+          // Ignore error fetching unassigned, proceed to create new
+          setShowAssignmentModal(false);
+        }
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.error?.message || err.message || 'Failed to fetch embedding');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLinkUnassigned = async () => {
+    if (!selectedUnassignedId) {
+      setError('Please select an unassigned embedding to link');
+      return;
+    }
+
+    try {
+      setLinking(true);
+      setError(null);
+      await apiClient.put(`/api/youtube/embeddings/${selectedUnassignedId}/assign`, {
+        video_id: videoId,
+      });
+      // Refresh the embedding
+      await fetchEmbedding();
+      setShowAssignmentModal(false);
+      if (onUpdate) {
+        onUpdate();
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.error?.message || err.message || 'Failed to link embedding');
+    } finally {
+      setLinking(false);
+    }
+  };
+
+  const handleCreateNew = async () => {
+    setShowAssignmentModal(false);
+    // Create the embedding now using getOrCreateEmbedding
+    try {
       const response = await apiClient.get(`/api/youtube/embeddings/${videoId}`);
       if (response.data.data) {
         setFormData(response.data.data);
+        setEmbeddingExists(true);
       }
     } catch (err: any) {
-      // If 404, it means no embedding exists yet - that's okay, we'll create it
-      if (err.response?.status !== 404) {
-        setError(err.response?.data?.error?.message || err.message || 'Failed to fetch embedding');
-      }
-    } finally {
-      setLoading(false);
+      setError(err.response?.data?.error?.message || err.message || 'Failed to create embedding');
     }
   };
 
@@ -187,6 +255,184 @@ export const VideoEmbeddingsEditor: React.FC<VideoEmbeddingsEditorProps> = ({
     { key: 'embedding_text' as const, label: 'Embedding Text' },
   ];
 
+  // Show assignment modal if no embedding exists and there are unassigned embeddings
+  if (showAssignmentModal && !embeddingExists && unassignedEmbeddings.length > 0) {
+    return (
+      <div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000,
+          padding: '1rem',
+        }}
+        onClick={onClose}
+      >
+        <div
+          style={{
+            backgroundColor: '#161b22',
+            borderRadius: '8px',
+            width: '100%',
+            maxWidth: '600px',
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.5)',
+            border: '1px solid #30363d',
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div
+            style={{
+              padding: '1.5rem',
+              borderBottom: '1px solid #30363d',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <div>
+              <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 600, color: '#c9d1d9' }}>
+                No Script Found
+              </h2>
+              {videoTitle && (
+                <p style={{ margin: '0.5rem 0 0 0', color: '#8b949e', fontSize: '0.875rem' }}>
+                  {videoTitle}
+                </p>
+              )}
+            </div>
+            <button
+              onClick={onClose}
+              style={{
+                background: 'none',
+                border: 'none',
+                fontSize: '1.5rem',
+                cursor: 'pointer',
+                color: '#8b949e',
+                padding: '0.5rem',
+                lineHeight: 1,
+              }}
+            >
+              ×
+            </button>
+          </div>
+
+          <div style={{ padding: '1.5rem' }}>
+            <p style={{ color: '#c9d1d9', marginBottom: '1.5rem', fontSize: '0.875rem' }}>
+              This video doesn't have a script yet. Would you like to assign an existing pending script, or create a new one?
+            </p>
+
+            {error && (
+              <div
+                style={{
+                  padding: '1rem',
+                  backgroundColor: '#5a1f1f',
+                  color: '#ff7b72',
+                  borderRadius: '4px',
+                  marginBottom: '1rem',
+                  border: '1px solid #da3633',
+                }}
+              >
+                {error}
+              </div>
+            )}
+
+            <div style={{ marginBottom: '1.5rem' }}>
+              <label
+                style={{
+                  display: 'block',
+                  marginBottom: '0.5rem',
+                  fontWeight: 500,
+                  color: '#c9d1d9',
+                  fontSize: '0.875rem',
+                }}
+              >
+                Assign Existing Pending Script:
+              </label>
+              <select
+                value={selectedUnassignedId}
+                onChange={(e) => setSelectedUnassignedId(e.target.value)}
+                disabled={linking}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  backgroundColor: '#0d1117',
+                  color: '#c9d1d9',
+                  border: '1px solid #30363d',
+                  borderRadius: '4px',
+                  fontSize: '0.875rem',
+                  cursor: linking ? 'not-allowed' : 'pointer',
+                  marginBottom: '0.75rem',
+                }}
+              >
+                <option value="">Select an unassigned script...</option>
+                {unassignedEmbeddings.map((embedding) => (
+                  <option key={embedding.id} value={embedding.id}>
+                    Script #{embedding.id.substring(0, 8)}
+                    {embedding.topic && ` - ${embedding.topic.substring(0, 50)}`}
+                    {embedding.hook && ` (${embedding.hook.substring(0, 30)}...)`}
+                  </option>
+                ))}
+              </select>
+              <button
+                onClick={handleLinkUnassigned}
+                disabled={!selectedUnassignedId || linking}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem 1rem',
+                  backgroundColor: linking ? '#6c757d' : '#238636',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: !selectedUnassignedId || linking ? 'not-allowed' : 'pointer',
+                  fontSize: '0.875rem',
+                  fontWeight: 500,
+                }}
+              >
+                {linking ? 'Assigning...' : 'Assign Selected Script'}
+              </button>
+            </div>
+
+            <div
+              style={{
+                padding: '1rem',
+                backgroundColor: '#0d1117',
+                borderRadius: '4px',
+                border: '1px solid #30363d',
+                marginBottom: '1rem',
+              }}
+            >
+              <p style={{ color: '#8b949e', fontSize: '0.75rem', margin: '0 0 0.5rem 0' }}>
+                OR
+              </p>
+            </div>
+
+            <button
+              onClick={handleCreateNew}
+              disabled={linking}
+              style={{
+                width: '100%',
+                padding: '0.75rem 1rem',
+                backgroundColor: '#21262d',
+                color: '#c9d1d9',
+                border: '1px solid #30363d',
+                borderRadius: '4px',
+                cursor: linking ? 'not-allowed' : 'pointer',
+                fontSize: '0.875rem',
+                fontWeight: 500,
+              }}
+            >
+              Create New Script
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       style={{
@@ -284,18 +530,19 @@ export const VideoEmbeddingsEditor: React.FC<VideoEmbeddingsEditorProps> = ({
 
                 {success && (
                   <div
-                  style={{
-                    padding: '1rem',
-                    backgroundColor: '#1a472a',
-                    color: '#7ee787',
-                    borderRadius: '4px',
-                    marginBottom: '1rem',
-                    border: '1px solid #238636',
-                  }}
+                    style={{
+                      padding: '1rem',
+                      backgroundColor: '#1a472a',
+                      color: '#7ee787',
+                      borderRadius: '4px',
+                      marginBottom: '1rem',
+                      border: '1px solid #238636',
+                    }}
                   >
                     ✅ Successfully updated embedding!
                   </div>
                 )}
+
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                   {textAreaFields.map((field) => (

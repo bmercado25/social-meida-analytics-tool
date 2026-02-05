@@ -44,6 +44,7 @@ Your task is to combine:
 – the user's intent
 – the inferred patterns from the provided data
 – best-practice SaaS marketing principles
+- the best practices for marketing on YouTube Shorts that are proven to work based on data in both the JSON and youtube landscape trends and historical data
 
 …to generate content that is distinct, compelling, and optimized to perform.`;
 
