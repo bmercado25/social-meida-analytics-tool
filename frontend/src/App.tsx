@@ -4,6 +4,7 @@ import { DataTable } from './components/DataTable';
 import { VideoEmbeddingsEditor } from './components/VideoEmbeddingsEditor';
 import { VideoDetailView } from './components/VideoDetailView';
 import { AnalyticsDashboard } from './components/AnalyticsDashboard';
+import { PromptAssistant } from './components/PromptAssistant';
 
 interface YouTubeVideo {
   id: string;
@@ -33,7 +34,7 @@ function App() {
   } | null>(null);
   const [selectedVideo, setSelectedVideo] = useState<YouTubeVideo | null>(null);
   const [detailVideo, setDetailVideo] = useState<YouTubeVideo | null>(null);
-  const [activeTab, setActiveTab] = useState<'table' | 'analytics'>('table');
+  const [activeTab, setActiveTab] = useState<'table' | 'analytics' | 'prompt'>('table');
 
   useEffect(() => {
     testConnection();
@@ -95,10 +96,10 @@ function App() {
   };
 
   return (
-    <div style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
+    <div style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto', backgroundColor: '#0d1117', minHeight: '100vh' }}>
       <header style={{ marginBottom: '2rem' }}>
-        <h1>Social Media Analytics Tool</h1>
-        <p>Connected to Supabase via API</p>
+        <h1 style={{ color: '#c9d1d9' }}>Marketing Analytic Ver. 1.0.1</h1>
+        <p style={{ color: '#8b949e' }}>Connected to Supabase via API</p>
       </header>
 
       {/* Connection Status */}
@@ -106,11 +107,11 @@ function App() {
         <div
           style={{
             padding: '1rem',
-            backgroundColor: connectionStatus.connected ? '#d4edda' : '#f8d7da',
-            color: connectionStatus.connected ? '#155724' : '#721c24',
+            backgroundColor: connectionStatus.connected ? '#1a472a' : '#5a1f1f',
+            color: connectionStatus.connected ? '#7ee787' : '#ff7b72',
             borderRadius: '4px',
             marginBottom: '1rem',
-            border: `1px solid ${connectionStatus.connected ? '#c3e6cb' : '#f5c6cb'}`,
+            border: `1px solid ${connectionStatus.connected ? '#238636' : '#da3633'}`,
           }}
         >
           <strong>Supabase Connection:</strong> {connectionStatus.message}
@@ -169,10 +170,11 @@ function App() {
         <div
           style={{
             padding: '1rem',
-            backgroundColor: retrieveStatus.includes('✅') ? '#d4edda' : '#f8d7da',
-            color: retrieveStatus.includes('✅') ? '#155724' : '#721c24',
+            backgroundColor: retrieveStatus.includes('✅') ? '#1a472a' : '#5a1f1f',
+            color: retrieveStatus.includes('✅') ? '#7ee787' : '#ff7b72',
             borderRadius: '4px',
             marginBottom: '1rem',
+            border: `1px solid ${retrieveStatus.includes('✅') ? '#238636' : '#da3633'}`,
           }}
         >
           {retrieveStatus}
@@ -183,10 +185,11 @@ function App() {
         <div
           style={{
             padding: '1rem',
-            backgroundColor: '#f8d7da',
-            color: '#721c24',
+            backgroundColor: '#5a1f1f',
+            color: '#ff7b72',
             borderRadius: '4px',
             marginBottom: '1rem',
+            border: '1px solid #da3633',
           }}
         >
           <strong>Error:</strong> {error}
@@ -199,7 +202,7 @@ function App() {
           display: 'flex',
           gap: '0.5rem',
           marginBottom: '1.5rem',
-          borderBottom: '2px solid #dee2e6',
+          borderBottom: '2px solid #30363d',
         }}
       >
         <button
@@ -207,9 +210,9 @@ function App() {
           style={{
             padding: '0.75rem 1.5rem',
             backgroundColor: 'transparent',
-            color: activeTab === 'table' ? '#007bff' : '#6c757d',
+            color: activeTab === 'table' ? '#58a6ff' : '#8b949e',
             border: 'none',
-            borderBottom: activeTab === 'table' ? '3px solid #007bff' : '3px solid transparent',
+            borderBottom: activeTab === 'table' ? '3px solid #58a6ff' : '3px solid transparent',
             cursor: 'pointer',
             fontSize: '1rem',
             fontWeight: activeTab === 'table' ? 600 : 400,
@@ -224,9 +227,9 @@ function App() {
           style={{
             padding: '0.75rem 1.5rem',
             backgroundColor: 'transparent',
-            color: activeTab === 'analytics' ? '#007bff' : '#6c757d',
+            color: activeTab === 'analytics' ? '#58a6ff' : '#8b949e',
             border: 'none',
-            borderBottom: activeTab === 'analytics' ? '3px solid #007bff' : '3px solid transparent',
+            borderBottom: activeTab === 'analytics' ? '3px solid #58a6ff' : '3px solid transparent',
             cursor: 'pointer',
             fontSize: '1rem',
             fontWeight: activeTab === 'analytics' ? 600 : 400,
@@ -236,15 +239,32 @@ function App() {
         >
           📈 Analytics Dashboard
         </button>
+        <button
+          onClick={() => setActiveTab('prompt')}
+          style={{
+            padding: '0.75rem 1.5rem',
+            backgroundColor: 'transparent',
+            color: activeTab === 'prompt' ? '#58a6ff' : '#8b949e',
+            border: 'none',
+            borderBottom: activeTab === 'prompt' ? '3px solid #58a6ff' : '3px solid transparent',
+            cursor: 'pointer',
+            fontSize: '1rem',
+            fontWeight: activeTab === 'prompt' ? 600 : 400,
+            transition: 'all 0.2s',
+            marginBottom: '-2px',
+          }}
+        >
+          ✨ Prompt Assistant
+        </button>
       </div>
 
-      {loading && <p>Loading YouTube videos...</p>}
+      {loading && <p style={{ color: '#8b949e' }}>Loading YouTube videos...</p>}
 
       {!loading && !error && (
         <>
           {activeTab === 'table' && (
             <div>
-              <h2>YouTube Shorts ({data.length} videos)</h2>
+              <h2 style={{ color: '#c9d1d9', marginBottom: '1rem' }}>YouTube Shorts ({data.length} videos)</h2>
               <DataTable
                 data={data}
                 tableName="youtube_videos"
@@ -262,11 +282,15 @@ function App() {
           {activeTab === 'analytics' && (
             <AnalyticsDashboard videos={data} />
           )}
+
+          {activeTab === 'prompt' && (
+            <PromptAssistant videos={data} />
+          )}
         </>
       )}
 
-      <div style={{ marginTop: '2rem', padding: '1rem', backgroundColor: '#e9ecef', borderRadius: '4px' }}>
-        <h3>API Health Check</h3>
+      <div style={{ marginTop: '2rem', padding: '1rem', backgroundColor: '#161b22', borderRadius: '4px', border: '1px solid #30363d' }}>
+        <h3 style={{ color: '#c9d1d9', marginBottom: '0.5rem' }}>API Health Check</h3>
         <HealthCheck />
       </div>
 
@@ -305,8 +329,8 @@ function HealthCheck() {
 
   return (
     <div>
-      <p>Status: {health?.status || 'checking...'}</p>
-      {health?.timestamp && <p>Timestamp: {health.timestamp}</p>}
+      <p style={{ color: '#8b949e', margin: '0.25rem 0' }}>Status: {health?.status || 'checking...'}</p>
+      {health?.timestamp && <p style={{ color: '#8b949e', margin: '0.25rem 0' }}>Timestamp: {health.timestamp}</p>}
     </div>
   );
 }

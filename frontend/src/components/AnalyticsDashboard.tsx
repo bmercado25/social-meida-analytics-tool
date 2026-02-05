@@ -44,7 +44,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ videos }
 
   return (
     <div style={{ padding: '1.5rem' }}>
-      <h2 style={{ marginBottom: '2rem', fontSize: '1.75rem', fontWeight: 600 }}>
+      <h2 style={{ marginBottom: '2rem', fontSize: '1.75rem', fontWeight: 600, color: '#c9d1d9' }}>
         Channel Analytics
       </h2>
 
@@ -60,18 +60,18 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ videos }
         {/* Total Views Card */}
         <div
           style={{
-            backgroundColor: 'white',
+            backgroundColor: '#161b22',
             borderRadius: '8px',
             padding: '1.5rem',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-            border: '1px solid #dee2e6',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+            border: '1px solid #30363d',
           }}
         >
           <div
             style={{
               fontSize: '0.875rem',
               fontWeight: 600,
-              color: '#6c757d',
+              color: '#8b949e',
               textTransform: 'uppercase',
               letterSpacing: '0.5px',
               marginBottom: '0.5rem',
@@ -83,13 +83,13 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ videos }
             style={{
               fontSize: '2rem',
               fontWeight: 700,
-              color: '#007bff',
+              color: '#58a6ff',
               marginBottom: '0.25rem',
             }}
           >
             {formatNumber(totalViews)}
           </div>
-          <div style={{ fontSize: '0.75rem', color: '#6c757d' }}>
+          <div style={{ fontSize: '0.75rem', color: '#8b949e' }}>
             {totalViews.toLocaleString()} total views
           </div>
         </div>
@@ -97,18 +97,18 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ videos }
         {/* Total Likes Card */}
         <div
           style={{
-            backgroundColor: 'white',
+            backgroundColor: '#161b22',
             borderRadius: '8px',
             padding: '1.5rem',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-            border: '1px solid #dee2e6',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+            border: '1px solid #30363d',
           }}
         >
           <div
             style={{
               fontSize: '0.875rem',
               fontWeight: 600,
-              color: '#6c757d',
+              color: '#8b949e',
               textTransform: 'uppercase',
               letterSpacing: '0.5px',
               marginBottom: '0.5rem',
@@ -120,7 +120,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ videos }
             style={{
               fontSize: '2rem',
               fontWeight: 700,
-              color: '#28a745',
+              color: '#7ee787',
               marginBottom: '0.25rem',
             }}
           >
@@ -134,18 +134,18 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ videos }
         {/* Total Comments Card */}
         <div
           style={{
-            backgroundColor: 'white',
+            backgroundColor: '#161b22',
             borderRadius: '8px',
             padding: '1.5rem',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-            border: '1px solid #dee2e6',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+            border: '1px solid #30363d',
           }}
         >
           <div
             style={{
               fontSize: '0.875rem',
               fontWeight: 600,
-              color: '#6c757d',
+              color: '#8b949e',
               textTransform: 'uppercase',
               letterSpacing: '0.5px',
               marginBottom: '0.5rem',
@@ -157,7 +157,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ videos }
             style={{
               fontSize: '2rem',
               fontWeight: 700,
-              color: '#17a2b8',
+              color: '#79c0ff',
               marginBottom: '0.25rem',
             }}
           >
@@ -171,18 +171,18 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ videos }
         {/* Average Engagement Rate Card */}
         <div
           style={{
-            backgroundColor: 'white',
+            backgroundColor: '#161b22',
             borderRadius: '8px',
             padding: '1.5rem',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-            border: '1px solid #dee2e6',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+            border: '1px solid #30363d',
           }}
         >
           <div
             style={{
               fontSize: '0.875rem',
               fontWeight: 600,
-              color: '#6c757d',
+              color: '#8b949e',
               textTransform: 'uppercase',
               letterSpacing: '0.5px',
               marginBottom: '0.5rem',
@@ -194,7 +194,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ videos }
             style={{
               fontSize: '2rem',
               fontWeight: 700,
-              color: '#ffc107',
+              color: '#d29922',
               marginBottom: '0.25rem',
             }}
           >
@@ -208,18 +208,18 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ videos }
         {/* Total Videos Card */}
         <div
           style={{
-            backgroundColor: 'white',
+            backgroundColor: '#161b22',
             borderRadius: '8px',
             padding: '1.5rem',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-            border: '1px solid #dee2e6',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+            border: '1px solid #30363d',
           }}
         >
           <div
             style={{
               fontSize: '0.875rem',
               fontWeight: 600,
-              color: '#6c757d',
+              color: '#8b949e',
               textTransform: 'uppercase',
               letterSpacing: '0.5px',
               marginBottom: '0.5rem',
@@ -231,7 +231,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ videos }
             style={{
               fontSize: '2rem',
               fontWeight: 700,
-              color: '#6f42c1',
+              color: '#bc8cff',
               marginBottom: '0.25rem',
             }}
           >
@@ -246,14 +246,14 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ videos }
       {/* Additional Stats Section */}
       <div
         style={{
-          backgroundColor: 'white',
+          backgroundColor: '#161b22',
           borderRadius: '8px',
           padding: '1.5rem',
           boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
           border: '1px solid #dee2e6',
         }}
       >
-        <h3 style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 600 }}>
+        <h3 style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 600, color: '#c9d1d9' }}>
           Additional Statistics
         </h3>
         <div
@@ -264,34 +264,34 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ videos }
           }}
         >
           <div>
-            <div style={{ fontSize: '0.75rem', color: '#6c757d', marginBottom: '0.25rem' }}>
+            <div style={{ fontSize: '0.75rem', color: '#8b949e', marginBottom: '0.25rem' }}>
               Average Views per Video
             </div>
-            <div style={{ fontSize: '1.25rem', fontWeight: 600, color: '#212529' }}>
+            <div style={{ fontSize: '1.25rem', fontWeight: 600, color: '#c9d1d9' }}>
               {totalVideos > 0 ? formatNumber(totalViews / totalVideos) : '0'}
             </div>
           </div>
           <div>
-            <div style={{ fontSize: '0.75rem', color: '#6c757d', marginBottom: '0.25rem' }}>
+            <div style={{ fontSize: '0.75rem', color: '#8b949e', marginBottom: '0.25rem' }}>
               Average Likes per Video
             </div>
-            <div style={{ fontSize: '1.25rem', fontWeight: 600, color: '#212529' }}>
+            <div style={{ fontSize: '1.25rem', fontWeight: 600, color: '#c9d1d9' }}>
               {totalVideos > 0 ? formatNumber(totalLikes / totalVideos) : '0'}
             </div>
           </div>
           <div>
-            <div style={{ fontSize: '0.75rem', color: '#6c757d', marginBottom: '0.25rem' }}>
+            <div style={{ fontSize: '0.75rem', color: '#8b949e', marginBottom: '0.25rem' }}>
               Average Comments per Video
             </div>
-            <div style={{ fontSize: '1.25rem', fontWeight: 600, color: '#212529' }}>
+            <div style={{ fontSize: '1.25rem', fontWeight: 600, color: '#c9d1d9' }}>
               {totalVideos > 0 ? formatNumber(totalComments / totalVideos) : '0'}
             </div>
           </div>
           <div>
-            <div style={{ fontSize: '0.75rem', color: '#6c757d', marginBottom: '0.25rem' }}>
+            <div style={{ fontSize: '0.75rem', color: '#8b949e', marginBottom: '0.25rem' }}>
               Total Engagement
             </div>
-            <div style={{ fontSize: '1.25rem', fontWeight: 600, color: '#212529' }}>
+            <div style={{ fontSize: '1.25rem', fontWeight: 600, color: '#c9d1d9' }}>
               {formatNumber(totalLikes + totalComments)}
             </div>
           </div>

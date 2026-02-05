@@ -206,39 +206,40 @@ export const VideoEmbeddingsEditor: React.FC<VideoEmbeddingsEditorProps> = ({
     >
       <div
         style={{
-          backgroundColor: 'white',
+          backgroundColor: '#161b22',
           borderRadius: '8px',
           width: '100%',
           maxWidth: '800px',
           maxHeight: '90vh',
           overflow: 'auto',
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.5)',
+          border: '1px solid #30363d',
         }}
         onClick={(e) => e.stopPropagation()}
       >
         <div
           style={{
             padding: '1.5rem',
-            borderBottom: '1px solid #dee2e6',
+            borderBottom: '1px solid #30363d',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
             position: 'sticky',
             top: 0,
-            backgroundColor: 'white',
+            backgroundColor: '#161b22',
             zIndex: 10,
           }}
         >
           <div>
-            <h2 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 600 }}>
+            <h2 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 600, color: '#c9d1d9' }}>
               Edit Video Embeddings
             </h2>
             {videoTitle && (
-              <p style={{ margin: '0.5rem 0 0 0', color: '#6c757d', fontSize: '0.875rem' }}>
+              <p style={{ margin: '0.5rem 0 0 0', color: '#8b949e', fontSize: '0.875rem' }}>
                 {videoTitle}
               </p>
             )}
-            <p style={{ margin: '0.25rem 0 0 0', color: '#6c757d', fontSize: '0.75rem' }}>
+            <p style={{ margin: '0.25rem 0 0 0', color: '#8b949e', fontSize: '0.75rem' }}>
               Video ID: {videoId}
             </p>
           </div>
@@ -249,7 +250,7 @@ export const VideoEmbeddingsEditor: React.FC<VideoEmbeddingsEditorProps> = ({
               border: 'none',
               fontSize: '1.5rem',
               cursor: 'pointer',
-              color: '#6c757d',
+              color: '#8b949e',
               padding: '0.5rem',
               lineHeight: 1,
             }}
@@ -268,13 +269,14 @@ export const VideoEmbeddingsEditor: React.FC<VideoEmbeddingsEditorProps> = ({
               <>
                 {error && !loading && (
                   <div
-                    style={{
-                      padding: '1rem',
-                      backgroundColor: '#f8d7da',
-                      color: '#721c24',
-                      borderRadius: '4px',
-                      marginBottom: '1rem',
-                    }}
+                  style={{
+                    padding: '1rem',
+                    backgroundColor: '#5a1f1f',
+                    color: '#ff7b72',
+                    borderRadius: '4px',
+                    marginBottom: '1rem',
+                    border: '1px solid #da3633',
+                  }}
                   >
                     {error}
                   </div>
@@ -282,13 +284,14 @@ export const VideoEmbeddingsEditor: React.FC<VideoEmbeddingsEditorProps> = ({
 
                 {success && (
                   <div
-                    style={{
-                      padding: '1rem',
-                      backgroundColor: '#d4edda',
-                      color: '#155724',
-                      borderRadius: '4px',
-                      marginBottom: '1rem',
-                    }}
+                  style={{
+                    padding: '1rem',
+                    backgroundColor: '#1a472a',
+                    color: '#7ee787',
+                    borderRadius: '4px',
+                    marginBottom: '1rem',
+                    border: '1px solid #238636',
+                  }}
                   >
                     ✅ Successfully updated embedding!
                   </div>
@@ -302,7 +305,7 @@ export const VideoEmbeddingsEditor: React.FC<VideoEmbeddingsEditorProps> = ({
                           display: 'block',
                           marginBottom: '0.5rem',
                           fontWeight: 500,
-                          color: '#495057',
+                          color: '#c9d1d9',
                           fontSize: '0.875rem',
                           textTransform: 'capitalize',
                         }}
@@ -316,11 +319,13 @@ export const VideoEmbeddingsEditor: React.FC<VideoEmbeddingsEditorProps> = ({
                           width: '100%',
                           minHeight: '80px',
                           padding: '0.75rem',
-                          border: '1px solid #dee2e6',
+                          border: '1px solid #30363d',
                           borderRadius: '4px',
                           fontSize: '0.875rem',
                           fontFamily: 'inherit',
                           resize: 'vertical',
+                          backgroundColor: '#0d1117',
+                          color: '#c9d1d9',
                         }}
                         placeholder={`Enter ${field.label.toLowerCase()}...`}
                       />
@@ -334,13 +339,13 @@ export const VideoEmbeddingsEditor: React.FC<VideoEmbeddingsEditorProps> = ({
           <div
             style={{
               padding: '1.5rem',
-              borderTop: '1px solid #dee2e6',
+              borderTop: '1px solid #30363d',
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
               position: 'sticky',
               bottom: 0,
-              backgroundColor: 'white',
+              backgroundColor: '#161b22',
             }}
           >
             <button
@@ -430,30 +435,31 @@ export const VideoEmbeddingsEditor: React.FC<VideoEmbeddingsEditorProps> = ({
           onClick={() => setShowJsonPreview(false)}
         >
           <div
-            style={{
-              backgroundColor: 'white',
-              borderRadius: '8px',
-              width: '100%',
-              maxWidth: '900px',
-              maxHeight: '90vh',
-              display: 'flex',
-              flexDirection: 'column',
-              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-            }}
+          style={{
+            backgroundColor: '#161b22',
+            borderRadius: '8px',
+            width: '100%',
+            maxWidth: '900px',
+            maxHeight: '90vh',
+            display: 'flex',
+            flexDirection: 'column',
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.5)',
+            border: '1px solid #30363d',
+          }}
             onClick={(e) => e.stopPropagation()}
           >
             <div
-              style={{
-                padding: '1.5rem',
-                borderBottom: '1px solid #dee2e6',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
-            >
-              <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 600 }}>
-                JSON Preview
-              </h3>
+          style={{
+            padding: '1.5rem',
+            borderBottom: '1px solid #30363d',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 600, color: '#c9d1d9' }}>
+            JSON Preview
+          </h3>
               <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                 <button
                   id="copy-json-btn"
@@ -490,12 +496,12 @@ export const VideoEmbeddingsEditor: React.FC<VideoEmbeddingsEditorProps> = ({
               </div>
             </div>
             <div
-              style={{
-                padding: '1.5rem',
-                overflow: 'auto',
-                flex: 1,
-                backgroundColor: '#f8f9fa',
-              }}
+          style={{
+            padding: '1.5rem',
+            overflow: 'auto',
+            flex: 1,
+            backgroundColor: '#0d1117',
+          }}
             >
               {jsonLoading ? (
                 <div style={{ textAlign: 'center', padding: '2rem' }}>

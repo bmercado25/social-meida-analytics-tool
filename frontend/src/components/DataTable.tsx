@@ -71,6 +71,28 @@ export const DataTable: React.FC<DataTableProps> = ({
   });
 
   const [showFilter, setShowFilter] = useState(false);
+  const [sortBy, setSortBy] = useState<'none' | 'best-asc' | 'best-desc'>('none');
+
+  // Sort data based on sortBy selection
+  const sortedData = React.useMemo(() => {
+    if (sortBy === 'none') return data;
+    
+    const sorted = [...data].sort((a, b) => {
+      // Use view_count as the primary metric for "best performing"
+      const viewsA = a.view_count || 0;
+      const viewsB = b.view_count || 0;
+      
+      if (sortBy === 'best-desc') {
+        // Descending: highest views first (best performing)
+        return viewsB - viewsA;
+      } else {
+        // Ascending: lowest views first (worst performing)
+        return viewsA - viewsB;
+      }
+    });
+    
+    return sorted;
+  }, [data, sortBy]);
 
   // Update visibility when columns change
   useEffect(() => {
@@ -193,7 +215,7 @@ export const DataTable: React.FC<DataTableProps> = ({
 
   if (data.length === 0) {
     return (
-      <div style={{ padding: '2rem', textAlign: 'center', color: '#6c757d' }}>
+      <div style={{ padding: '2rem', textAlign: 'center', color: '#8b949e' }}>
         <p>No data available in {tableName || 'this table'}</p>
       </div>
     );
@@ -201,15 +223,50 @@ export const DataTable: React.FC<DataTableProps> = ({
 
   return (
     <div style={{ marginTop: '1rem' }}>
-      {/* Column Filter Button */}
-      <div style={{ marginBottom: '0.5rem', display: 'flex', justifyContent: 'flex-end', position: 'relative' }}>
+      {/* Sort and Column Filter Buttons */}
+      <div style={{ marginBottom: '0.5rem', display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', position: 'relative' }}>
+        {/* Sort Dropdown */}
+        <div style={{ position: 'relative' }}>
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as 'none' | 'best-asc' | 'best-desc')}
+            style={{
+              padding: '0.5rem 1rem',
+              backgroundColor: '#21262d',
+              color: '#c9d1d9',
+              border: '1px solid #30363d',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '0.875rem',
+              appearance: 'none',
+              paddingRight: '2.5rem',
+            }}
+          >
+            <option value="none">Sort: None</option>
+            <option value="best-desc">Best Performing ↓</option>
+            <option value="best-asc">Best Performing ↑</option>
+          </select>
+          <span
+            style={{
+              position: 'absolute',
+              right: '0.75rem',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              pointerEvents: 'none',
+              color: '#8b949e',
+            }}
+          >
+            ▼
+          </span>
+        </div>
+        
         <button
           onClick={() => setShowFilter(!showFilter)}
           style={{
             padding: '0.5rem 1rem',
-            backgroundColor: '#6c757d',
-            color: 'white',
-            border: 'none',
+            backgroundColor: '#21262d',
+            color: '#c9d1d9',
+            border: '1px solid #30363d',
             borderRadius: '4px',
             cursor: 'pointer',
             fontSize: '0.875rem',
@@ -229,10 +286,10 @@ export const DataTable: React.FC<DataTableProps> = ({
               top: '100%',
               right: 0,
               marginTop: '0.5rem',
-              backgroundColor: 'white',
-              border: '1px solid #dee2e6',
+              backgroundColor: '#161b22',
+              border: '1px solid #30363d',
               borderRadius: '8px',
-              boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+              boxShadow: '0 4px 6px rgba(0,0,0,0.3)',
               zIndex: 1000,
               minWidth: '250px',
               maxHeight: '400px',
@@ -240,8 +297,8 @@ export const DataTable: React.FC<DataTableProps> = ({
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ padding: '1rem', borderBottom: '1px solid #dee2e6', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <strong>Show/Hide Columns</strong>
+            <div style={{ padding: '1rem', borderBottom: '1px solid #30363d', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <strong style={{ color: '#c9d1d9' }}>Show/Hide Columns</strong>
               <button
                 onClick={() => setShowFilter(false)}
                 style={{
@@ -249,7 +306,7 @@ export const DataTable: React.FC<DataTableProps> = ({
                   border: 'none',
                   fontSize: '1.2rem',
                   cursor: 'pointer',
-                  color: '#6c757d',
+                  color: '#8b949e',
                 }}
               >
                 ×
@@ -301,7 +358,7 @@ export const DataTable: React.FC<DataTableProps> = ({
                       transition: 'background-color 0.2s',
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = '#f8f9fa';
+                      e.currentTarget.style.backgroundColor = '#21262d';
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.backgroundColor = 'transparent';
@@ -313,7 +370,7 @@ export const DataTable: React.FC<DataTableProps> = ({
                       onChange={() => toggleColumn(column.key)}
                       style={{ marginRight: '0.5rem', cursor: 'pointer' }}
                     />
-                    <span style={{ fontSize: '0.875rem' }}>{column.label}</span>
+                    <span style={{ fontSize: '0.875rem', color: '#c9d1d9' }}>{column.label}</span>
                   </label>
                 ))}
               </div>
@@ -341,9 +398,9 @@ export const DataTable: React.FC<DataTableProps> = ({
         style={{ 
           overflowX: 'auto', 
           width: '100%',
-          border: '1px solid #dee2e6',
+          border: '1px solid #30363d',
           borderRadius: '8px',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
         }}
       >
         <table
@@ -351,11 +408,11 @@ export const DataTable: React.FC<DataTableProps> = ({
             width: '100%',
             minWidth: '800px', // Ensure table doesn't compress too much
             borderCollapse: 'collapse',
-            backgroundColor: 'white',
+            backgroundColor: '#161b22',
           }}
         >
         <thead>
-          <tr style={{ backgroundColor: '#f8f9fa', borderBottom: '2px solid #dee2e6' }}>
+          <tr style={{ backgroundColor: '#21262d', borderBottom: '2px solid #30363d' }}>
             {visibleColumns.map((column) => (
               <th
                 key={column.key}
@@ -363,14 +420,14 @@ export const DataTable: React.FC<DataTableProps> = ({
                   padding: '0.75rem 1rem',
                   textAlign: 'left',
                   fontWeight: 600,
-                  color: '#495057',
+                  color: '#c9d1d9',
                   fontSize: '0.875rem',
                   textTransform: 'uppercase',
                   letterSpacing: '0.5px',
                   whiteSpace: 'nowrap',
                   position: 'sticky',
                   top: 0,
-                  backgroundColor: '#f8f9fa',
+                  backgroundColor: '#21262d',
                   zIndex: 1,
                 }}
               >
@@ -383,7 +440,7 @@ export const DataTable: React.FC<DataTableProps> = ({
                   padding: '1rem',
                   textAlign: 'center',
                   fontWeight: 600,
-                  color: '#495057',
+                  color: '#c9d1d9',
                   fontSize: '0.875rem',
                   textTransform: 'uppercase',
                   letterSpacing: '0.5px',
@@ -396,19 +453,19 @@ export const DataTable: React.FC<DataTableProps> = ({
           </tr>
         </thead>
         <tbody>
-          {data.map((row, index) => (
+          {sortedData.map((row, index) => (
             <tr
               key={row.id || index}
               style={{
-                borderBottom: '1px solid #dee2e6',
+                borderBottom: '1px solid #30363d',
                 transition: 'background-color 0.2s',
                 cursor: onRowClick ? 'pointer' : 'default',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#f8f9fa';
+                e.currentTarget.style.backgroundColor = '#21262d';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'white';
+                e.currentTarget.style.backgroundColor = '#161b22';
               }}
               onClick={(e) => {
                 // Don't trigger row click if clicking on action button
@@ -422,7 +479,7 @@ export const DataTable: React.FC<DataTableProps> = ({
                   key={column.key}
                   style={{
                     padding: '0.75rem 1rem',
-                    color: '#212529',
+                    color: '#c9d1d9',
                     fontSize: '0.875rem',
                     whiteSpace: column.key === 'thumbnail_url' ? 'normal' : 'nowrap',
                     maxWidth: column.key === 'thumbnail_url' ? 'none' : '300px',
@@ -447,7 +504,7 @@ export const DataTable: React.FC<DataTableProps> = ({
                     onClick={() => onActionClick(row)}
                     style={{
                       padding: '0.5rem 1rem',
-                      backgroundColor: '#007bff',
+                      backgroundColor: '#238636',
                       color: 'white',
                       border: 'none',
                       borderRadius: '4px',
@@ -457,10 +514,10 @@ export const DataTable: React.FC<DataTableProps> = ({
                       transition: 'background-color 0.2s',
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = '#0056b3';
+                      e.currentTarget.style.backgroundColor = '#2ea043';
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = '#007bff';
+                      e.currentTarget.style.backgroundColor = '#238636';
                     }}
                   >
                     Actions

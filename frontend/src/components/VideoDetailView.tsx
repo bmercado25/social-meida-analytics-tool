@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { apiClient } from '../config/api';
+import { ViewsChart } from './ViewsChart';
 
 interface VideoDetailViewProps {
   video: any; // Full video row from youtube_videos
@@ -10,9 +11,12 @@ export const VideoDetailView: React.FC<VideoDetailViewProps> = ({ video, onClose
   const [loading, setLoading] = useState(true);
   const [embedding, setEmbedding] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
+  const [statsData, setStatsData] = useState<any[]>([]);
+  const [statsLoading, setStatsLoading] = useState(true);
 
   useEffect(() => {
     fetchEmbedding();
+    fetchStats();
   }, [video.video_id]);
 
   const fetchEmbedding = async () => {
@@ -30,6 +34,53 @@ export const VideoDetailView: React.FC<VideoDetailViewProps> = ({ video, onClose
       }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchStats = async () => {
+    try {
+      setStatsLoading(true);
+      const response = await apiClient.get(`/api/youtube/stats/${video.video_id}`);
+      if (response.data.success) {
+        const { historical, current } = response.data.data;
+        
+        // Combine historical data with current data
+        const chartData: any[] = [];
+        
+        // Add historical points
+        if (historical && historical.length > 0) {
+          historical.forEach((stat: any) => {
+            chartData.push({
+              date: new Date(stat.recorded_at),
+              views: stat.view_count || 0,
+              label: new Date(stat.recorded_at).toLocaleString(),
+            });
+          });
+        }
+        
+        // Add current data point if available
+        if (current && current.view_count !== undefined) {
+          const currentDate = current.last_synced_at 
+            ? new Date(current.last_synced_at)
+            : new Date();
+          chartData.push({
+            date: currentDate,
+            views: current.view_count || 0,
+            label: `Current (${currentDate.toLocaleString()})`,
+          });
+        }
+        
+        // Sort by date
+        chartData.sort((a, b) => a.date.getTime() - b.date.getTime());
+        
+        setStatsData(chartData);
+      }
+    } catch (err: any) {
+      // 404 or other errors are okay - just means no stats yet
+      console.log('No stats data available:', err.message);
+      setStatsData([]);
+    } finally {
+      setStatsLoading(false);
     }
   };
 
@@ -66,29 +117,29 @@ export const VideoDetailView: React.FC<VideoDetailViewProps> = ({ video, onClose
     return (
       <div style={{ marginBottom: '1rem' }}>
         <div
-          style={{
-            fontSize: '0.75rem',
-            fontWeight: 600,
-            color: '#6c757d',
-            textTransform: 'uppercase',
-            letterSpacing: '0.5px',
-            marginBottom: '0.25rem',
-          }}
+                          style={{
+                            fontSize: '0.75rem',
+                            fontWeight: 600,
+                            color: '#8b949e',
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.5px',
+                            marginBottom: '0.25rem',
+                          }}
         >
           {label}
         </div>
         <div
-          style={{
-            fontSize: isLarge ? '1rem' : '0.875rem',
-            color: '#212529',
-            wordBreak: 'break-word',
-            whiteSpace: isLarge ? 'pre-wrap' : 'normal',
-            lineHeight: isLarge ? '1.6' : '1.4',
-            padding: isLarge ? '0.75rem' : '0',
-            backgroundColor: isLarge ? '#f8f9fa' : 'transparent',
-            borderRadius: isLarge ? '4px' : '0',
-            border: isLarge ? '1px solid #dee2e6' : 'none',
-          }}
+                          style={{
+                            fontSize: isLarge ? '1rem' : '0.875rem',
+                            color: '#c9d1d9',
+                            wordBreak: 'break-word',
+                            whiteSpace: isLarge ? 'pre-wrap' : 'normal',
+                            lineHeight: isLarge ? '1.6' : '1.4',
+                            padding: isLarge ? '0.75rem' : '0',
+                            backgroundColor: isLarge ? '#0d1117' : 'transparent',
+                            borderRadius: isLarge ? '4px' : '0',
+                            border: isLarge ? '1px solid #30363d' : 'none',
+                          }}
         >
           {formattedValue}
         </div>
@@ -193,13 +244,14 @@ export const VideoDetailView: React.FC<VideoDetailViewProps> = ({ video, onClose
     >
       <div
         style={{
-          backgroundColor: 'white',
+          backgroundColor: '#161b22',
           borderRadius: '8px',
           width: '100%',
           maxWidth: '1000px',
           maxHeight: '90vh',
           overflow: 'auto',
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.5)',
+          border: '1px solid #30363d',
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -207,22 +259,22 @@ export const VideoDetailView: React.FC<VideoDetailViewProps> = ({ video, onClose
         <div
           style={{
             padding: '1.5rem',
-            borderBottom: '1px solid #dee2e6',
+            borderBottom: '1px solid #30363d',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
             position: 'sticky',
             top: 0,
-            backgroundColor: 'white',
+            backgroundColor: '#161b22',
             zIndex: 10,
           }}
         >
           <div>
-            <h2 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 600 }}>
+            <h2 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 600, color: '#c9d1d9' }}>
               Video Details
             </h2>
             {video.title && (
-              <p style={{ margin: '0.5rem 0 0 0', color: '#6c757d', fontSize: '0.875rem' }}>
+              <p style={{ margin: '0.5rem 0 0 0', color: '#8b949e', fontSize: '0.875rem' }}>
                 {video.title}
               </p>
             )}
@@ -234,7 +286,7 @@ export const VideoDetailView: React.FC<VideoDetailViewProps> = ({ video, onClose
               border: 'none',
               fontSize: '1.5rem',
               cursor: 'pointer',
-              color: '#6c757d',
+              color: '#8b949e',
               padding: '0.5rem',
               lineHeight: 1,
             }}
@@ -253,13 +305,14 @@ export const VideoDetailView: React.FC<VideoDetailViewProps> = ({ video, onClose
             <>
               {error && (
                 <div
-                  style={{
-                    padding: '1rem',
-                    backgroundColor: '#fff3cd',
-                    color: '#856404',
-                    borderRadius: '4px',
-                    marginBottom: '1rem',
-                  }}
+                style={{
+                  padding: '1rem',
+                  backgroundColor: '#3d2817',
+                  color: '#d29922',
+                  borderRadius: '4px',
+                  marginBottom: '1rem',
+                  border: '1px solid #bb8009',
+                }}
                 >
                   ⚠️ {error}
                 </div>
@@ -272,10 +325,10 @@ export const VideoDetailView: React.FC<VideoDetailViewProps> = ({ video, onClose
                     style={{
                       fontSize: '1.1rem',
                       fontWeight: 600,
-                      color: '#495057',
+                      color: '#c9d1d9',
                       marginBottom: '1rem',
                       paddingBottom: '0.5rem',
-                      borderBottom: '2px solid #dee2e6',
+                      borderBottom: '2px solid #30363d',
                     }}
                   >
                     {section.title}
@@ -287,14 +340,14 @@ export const VideoDetailView: React.FC<VideoDetailViewProps> = ({ video, onClose
                         return (
                           <div key={field.key} style={{ marginBottom: '1rem', gridColumn: '1 / -1' }}>
                             <div
-                              style={{
-                                fontSize: '0.75rem',
-                                fontWeight: 600,
-                                color: '#6c757d',
-                                textTransform: 'uppercase',
-                                letterSpacing: '0.5px',
-                                marginBottom: '0.25rem',
-                              }}
+                          style={{
+                            fontSize: '0.75rem',
+                            fontWeight: 600,
+                            color: '#8b949e',
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.5px',
+                            marginBottom: '0.25rem',
+                          }}
                             >
                               {field.label}
                             </div>
@@ -304,9 +357,9 @@ export const VideoDetailView: React.FC<VideoDetailViewProps> = ({ video, onClose
                               style={{
                                 maxWidth: '300px',
                                 maxHeight: '200px',
-                                borderRadius: '4px',
-                                border: '1px solid #dee2e6',
-                              }}
+                              borderRadius: '4px',
+                              border: '1px solid #30363d',
+                            }}
                             />
                             <div style={{ marginTop: '0.5rem', fontSize: '0.75rem', color: '#6c757d', wordBreak: 'break-all' }}>
                               {video[field.key]}
@@ -323,6 +376,39 @@ export const VideoDetailView: React.FC<VideoDetailViewProps> = ({ video, onClose
                   </div>
                 </div>
               ))}
+
+              {/* Views Growth Chart */}
+              <div style={{ marginBottom: '2rem' }}>
+                <h3
+                  style={{
+                    fontSize: '1.1rem',
+                    fontWeight: 600,
+                    color: '#495057',
+                    marginBottom: '1rem',
+                    paddingBottom: '0.5rem',
+                    borderBottom: '2px solid #dee2e6',
+                  }}
+                >
+                  View Growth Over Time
+                </h3>
+                <div
+                  style={{
+                    backgroundColor: '#0d1117',
+                    borderRadius: '8px',
+                    padding: '1.5rem',
+                    border: '1px solid #30363d',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+                  }}
+                >
+                  {statsLoading ? (
+                    <div style={{ textAlign: 'center', padding: '2rem', color: '#8b949e' }}>
+                      Loading chart data...
+                    </div>
+                  ) : (
+                    <ViewsChart data={statsData} width={900} height={300} />
+                  )}
+                </div>
+              </div>
 
               {/* Embedding Sections */}
               {embedding ? (
@@ -350,18 +436,18 @@ export const VideoDetailView: React.FC<VideoDetailViewProps> = ({ video, onClose
                   </div>
                 ))
               ) : (
-                <div style={{ marginBottom: '2rem', padding: '1rem', backgroundColor: '#e9ecef', borderRadius: '4px' }}>
+                <div style={{ marginBottom: '2rem', padding: '1rem', backgroundColor: '#0d1117', borderRadius: '4px', border: '1px solid #30363d' }}>
                   <h3
                     style={{
                       fontSize: '1.1rem',
                       fontWeight: 600,
-                      color: '#495057',
+                      color: '#c9d1d9',
                       marginBottom: '0.5rem',
                     }}
                   >
                     Embedding Data
                   </h3>
-                  <p style={{ margin: 0, color: '#6c757d' }}>
+                  <p style={{ margin: 0, color: '#8b949e' }}>
                     No embedding data found for this video. Use "Edit Embeddings" to create one.
                   </p>
                 </div>
@@ -374,10 +460,10 @@ export const VideoDetailView: React.FC<VideoDetailViewProps> = ({ video, onClose
                     style={{
                       fontSize: '1.1rem',
                       fontWeight: 600,
-                      color: '#495057',
+                      color: '#c9d1d9',
                       marginBottom: '1rem',
                       paddingBottom: '0.5rem',
-                      borderBottom: '2px solid #dee2e6',
+                      borderBottom: '2px solid #30363d',
                     }}
                   >
                     Additional Video Information
@@ -399,10 +485,10 @@ export const VideoDetailView: React.FC<VideoDetailViewProps> = ({ video, onClose
                     style={{
                       fontSize: '1.1rem',
                       fontWeight: 600,
-                      color: '#495057',
+                      color: '#c9d1d9',
                       marginBottom: '1rem',
                       paddingBottom: '0.5rem',
-                      borderBottom: '2px solid #dee2e6',
+                      borderBottom: '2px solid #30363d',
                     }}
                   >
                     Additional Embedding Information
