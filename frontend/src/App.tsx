@@ -6,6 +6,7 @@ import { VideoDetailView } from './components/VideoDetailView';
 import { AnalyticsDashboard } from './components/AnalyticsDashboard';
 import { PromptAssistant } from './components/PromptAssistant';
 import { PendingEmbeddings } from './components/PendingEmbeddings';
+import { Chatbot } from './components/Chatbot';
 
 interface YouTubeVideo {
   id: string;
@@ -35,7 +36,7 @@ function App() {
   } | null>(null);
   const [selectedVideo, setSelectedVideo] = useState<YouTubeVideo | null>(null);
   const [detailVideo, setDetailVideo] = useState<YouTubeVideo | null>(null);
-  const [activeTab, setActiveTab] = useState<'table' | 'analytics' | 'prompt' | 'pending'>('table');
+  const [activeTab, setActiveTab] = useState<'table' | 'analytics' | 'prompt' | 'pending' | 'chatbot'>('table');
 
   useEffect(() => {
     testConnection();
@@ -274,6 +275,23 @@ function App() {
         >
           Pending Scripts
         </button>
+        <button
+          onClick={() => setActiveTab('chatbot')}
+          style={{
+            padding: '0.75rem 1.5rem',
+            backgroundColor: 'transparent',
+            color: activeTab === 'chatbot' ? '#58a6ff' : '#8b949e',
+            border: 'none',
+            borderBottom: activeTab === 'chatbot' ? '3px solid #58a6ff' : '3px solid transparent',
+            cursor: 'pointer',
+            fontSize: '1rem',
+            fontWeight: activeTab === 'chatbot' ? 600 : 400,
+            transition: 'all 0.2s',
+            marginBottom: '-2px',
+          }}
+        >
+          Chatbot
+        </button>
       </div>
 
       {loading && <p style={{ color: '#8b949e' }}>Loading YouTube videos...</p>}
@@ -307,6 +325,10 @@ function App() {
 
           {activeTab === 'pending' && (
             <PendingEmbeddings />
+          )}
+
+          {activeTab === 'chatbot' && (
+            <Chatbot videos={data} />
           )}
         </>
       )}

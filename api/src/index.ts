@@ -5,6 +5,7 @@ import analyticsRoutes from './routes/analytics.routes.js';
 import healthRoutes from './routes/health.routes.js';
 import testRoutes from './routes/test.routes.js';
 import youtubeRoutes from './routes/youtube.routes.js';
+import chatRoutes from './routes/chat.routes.js';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware.js';
 
 const app: Express = express();
@@ -19,6 +20,7 @@ app.use('/health', healthRoutes);
 app.use('/api', testRoutes); // /api/test-connection
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/youtube', youtubeRoutes);
+app.use('/api/chat', chatRoutes);
 
 // Error handling
 app.use(notFoundHandler);

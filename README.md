@@ -2,8 +2,6 @@
 
 A full-stack application for social media analytics with Supabase backend.
 
-> **Note:** This project includes YouTube video analytics and embedding management features.
-
 ## Project Structure
 
 ```
