@@ -254,6 +254,7 @@ export const DataTable: React.FC<DataTableProps> = ({
               transform: 'translateY(-50%)',
               pointerEvents: 'none',
               color: '#8b949e',
+              fontSize: '0.7rem',
             }}
           >
             ▼
@@ -267,15 +268,19 @@ export const DataTable: React.FC<DataTableProps> = ({
             backgroundColor: '#21262d',
             color: '#c9d1d9',
             border: '1px solid #30363d',
-            borderRadius: '4px',
+            borderRadius: '6px',
             cursor: 'pointer',
             fontSize: '0.875rem',
+            fontWeight: 500,
             display: 'flex',
             alignItems: 'center',
             gap: '0.5rem',
+            transition: 'all 0.2s',
           }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#30363d'}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#21262d'}
         >
-          Column Filter
+         Column Filter
         </button>
 
         {/* Filter Dropdown */}
@@ -289,42 +294,44 @@ export const DataTable: React.FC<DataTableProps> = ({
               backgroundColor: '#161b22',
               border: '1px solid #30363d',
               borderRadius: '8px',
-              boxShadow: '0 4px 6px rgba(0,0,0,0.3)',
+              boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
               zIndex: 1000,
-              minWidth: '250px',
-              maxHeight: '400px',
+              minWidth: '280px',
+              maxHeight: '450px',
               overflowY: 'auto',
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ padding: '1rem', borderBottom: '1px solid #30363d', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <strong style={{ color: '#c9d1d9' }}>Show/Hide Columns</strong>
+            <div style={{ padding: '1.25rem', borderBottom: '1px solid #30363d', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <strong style={{ color: '#c9d1d9', fontSize: '0.9rem' }}>Configure Columns</strong>
               <button
                 onClick={() => setShowFilter(false)}
                 style={{
                   background: 'none',
                   border: 'none',
-                  fontSize: '1.2rem',
+                  fontSize: '1.5rem',
                   cursor: 'pointer',
                   color: '#8b949e',
+                  lineHeight: 1,
                 }}
               >
                 ×
               </button>
             </div>
-            <div style={{ padding: '0.5rem' }}>
-              <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
+            <div style={{ padding: '0.75rem' }}>
+              <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem' }}>
                 <button
                   onClick={showAllColumns}
                   style={{
                     flex: 1,
-                    padding: '0.4rem',
-                    backgroundColor: '#28a745',
+                    padding: '0.5rem',
+                    backgroundColor: '#238636',
                     color: 'white',
                     border: 'none',
-                    borderRadius: '4px',
+                    borderRadius: '6px',
                     cursor: 'pointer',
                     fontSize: '0.75rem',
+                    fontWeight: 600,
                   }}
                 >
                   Show All
@@ -333,44 +340,51 @@ export const DataTable: React.FC<DataTableProps> = ({
                   onClick={hideAllColumns}
                   style={{
                     flex: 1,
-                    padding: '0.4rem',
-                    backgroundColor: '#dc3545',
+                    padding: '0.5rem',
+                    backgroundColor: '#da3633',
                     color: 'white',
                     border: 'none',
-                    borderRadius: '4px',
+                    borderRadius: '6px',
                     cursor: 'pointer',
                     fontSize: '0.75rem',
+                    fontWeight: 600,
                   }}
                 >
                   Hide All
                 </button>
               </div>
-              <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
+              <div style={{ maxHeight: '300px', overflowY: 'auto', padding: '0.25rem' }}>
                 {autoColumns.map((column) => (
                   <label
                     key={column.key}
                     style={{
                       display: 'flex',
                       alignItems: 'center',
-                      padding: '0.5rem',
+                      padding: '0.6rem 0.75rem',
                       cursor: 'pointer',
-                      borderRadius: '4px',
-                      transition: 'background-color 0.2s',
+                      borderRadius: '6px',
+                      transition: 'background-color 0.15s',
+                      marginBottom: '0.1rem',
+                      backgroundColor: columnVisibility[column.key] !== false ? '#1f6feb11' : 'transparent',
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = '#21262d';
+                      if (columnVisibility[column.key] === false) {
+                        e.currentTarget.style.backgroundColor = '#21262d';
+                      }
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = 'transparent';
+                      if (columnVisibility[column.key] === false) {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                      }
                     }}
                   >
                     <input
                       type="checkbox"
                       checked={columnVisibility[column.key] !== false}
                       onChange={() => toggleColumn(column.key)}
-                      style={{ marginRight: '0.5rem', cursor: 'pointer' }}
+                      style={{ marginRight: '0.75rem', cursor: 'pointer', width: '16px', height: '16px' }}
                     />
-                    <span style={{ fontSize: '0.875rem', color: '#c9d1d9' }}>{column.label}</span>
+                    <span style={{ fontSize: '0.875rem', color: columnVisibility[column.key] !== false ? '#c9d1d9' : '#8b949e' }}>{column.label}</span>
                   </label>
                 ))}
               </div>
@@ -399,36 +413,40 @@ export const DataTable: React.FC<DataTableProps> = ({
           overflowX: 'auto', 
           width: '100%',
           border: '1px solid #30363d',
-          borderRadius: '8px',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+          borderRadius: '10px',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
+          backgroundColor: '#0d1117',
         }}
       >
         <table
           style={{
             width: '100%',
             minWidth: '800px', // Ensure table doesn't compress too much
-            borderCollapse: 'collapse',
+            borderCollapse: 'separate',
+            borderSpacing: 0,
             backgroundColor: '#161b22',
           }}
         >
         <thead>
-          <tr style={{ backgroundColor: '#21262d', borderBottom: '2px solid #30363d' }}>
-            {visibleColumns.map((column) => (
+          <tr style={{ backgroundColor: '#21262d' }}>
+            {visibleColumns.map((column, colIdx) => (
               <th
                 key={column.key}
                 style={{
-                  padding: '0.75rem 1rem',
+                  padding: '1rem 1.25rem',
                   textAlign: 'left',
                   fontWeight: 600,
                   color: '#c9d1d9',
-                  fontSize: '0.875rem',
+                  fontSize: '0.75rem',
                   textTransform: 'uppercase',
-                  letterSpacing: '0.5px',
+                  letterSpacing: '0.05em',
                   whiteSpace: 'nowrap',
                   position: 'sticky',
                   top: 0,
                   backgroundColor: '#21262d',
                   zIndex: 1,
+                  borderBottom: '2px solid #30363d',
+                  borderTopLeftRadius: colIdx === 0 ? '10px' : 0,
                 }}
               >
                 {column.label}
@@ -437,14 +455,20 @@ export const DataTable: React.FC<DataTableProps> = ({
             {onActionClick && (
               <th
                 style={{
-                  padding: '1rem',
+                  padding: '1rem 1.25rem',
                   textAlign: 'center',
                   fontWeight: 600,
                   color: '#c9d1d9',
-                  fontSize: '0.875rem',
+                  fontSize: '0.75rem',
                   textTransform: 'uppercase',
-                  letterSpacing: '0.5px',
-                  width: '120px',
+                  letterSpacing: '0.05em',
+                  width: '140px',
+                  position: 'sticky',
+                  top: 0,
+                  backgroundColor: '#21262d',
+                  zIndex: 1,
+                  borderBottom: '2px solid #30363d',
+                  borderTopRightRadius: '10px',
                 }}
               >
                 {actionLabel}
@@ -458,14 +482,14 @@ export const DataTable: React.FC<DataTableProps> = ({
               key={row.id || index}
               style={{
                 borderBottom: '1px solid #30363d',
-                transition: 'background-color 0.2s',
+                transition: 'background-color 0.1s ease',
                 cursor: onRowClick ? 'pointer' : 'default',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#21262d';
+                e.currentTarget.style.backgroundColor = '#1f6feb11';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = '#161b22';
+                e.currentTarget.style.backgroundColor = 'transparent';
               }}
               onClick={(e) => {
                 // Don't trigger row click if clicking on action button
@@ -478,9 +502,10 @@ export const DataTable: React.FC<DataTableProps> = ({
                 <td
                   key={column.key}
                   style={{
-                    padding: '0.75rem 1rem',
+                    padding: '1rem 1.25rem',
                     color: '#c9d1d9',
                     fontSize: '0.875rem',
+                    borderBottom: '1px solid #30363d',
                     whiteSpace: column.key === 'thumbnail_url' ? 'normal' : 'nowrap',
                     maxWidth: column.key === 'thumbnail_url' ? 'none' : '300px',
                     overflow: 'hidden',
@@ -496,31 +521,35 @@ export const DataTable: React.FC<DataTableProps> = ({
               {onActionClick && (
                 <td
                   style={{
-                    padding: '1rem',
+                    padding: '1rem 1.25rem',
                     textAlign: 'center',
+                    borderBottom: '1px solid #30363d',
                   }}
                 >
                   <button
                     onClick={() => onActionClick(row)}
                     style={{
                       padding: '0.5rem 1rem',
-                      backgroundColor: '#238636',
+                      backgroundColor: '#0d1117',
                       color: 'white',
                       border: 'none',
-                      borderRadius: '4px',
+                      borderRadius: '6px',
                       cursor: 'pointer',
-                      fontSize: '0.875rem',
-                      fontWeight: 500,
-                      transition: 'background-color 0.2s',
+                      fontSize: '0.8125rem',
+                      fontWeight: 600,
+                      transition: 'all 0.2s',
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = '#2ea043';
+                      e.currentTarget.style.backgroundColor = '#212B3A';
+                      e.currentTarget.style.transform = 'translateY(-1px)';
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = '#238636';
+                      e.currentTarget.style.backgroundColor = '#0d1117';
+                      e.currentTarget.style.transform = 'translateY(0)';
                     }}
                   >
-                    Edit/Add
+                    Edit
                   </button>
                 </td>
               )}

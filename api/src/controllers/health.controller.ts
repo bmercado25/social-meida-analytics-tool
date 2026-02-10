@@ -11,7 +11,7 @@ export const testConnection = async (
 ): Promise<void> => {
   try {
     // Test connection by querying test_table
-    const { data, error, count } = await supabaseAdmin
+    const { data, error } = await supabaseAdmin
       .from('test_table')
       .select('*', { count: 'exact', head: true });
 
@@ -21,16 +21,15 @@ export const testConnection = async (
 
     res.json({
       success: true,
-      message: 'Successfully connected to Supabase',
+      message: 'Connection to DB successful',
       table: 'test_table',
-      rowCount: count || 0,
       timestamp: new Date().toISOString(),
     });
   } catch (error: any) {
-    console.error('Supabase connection test failed:', error);
+    console.error('DB connection test failed:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to connect to Supabase',
+      message: 'DB connection test failed',
       error: error.message,
       details: error.details || null,
     });

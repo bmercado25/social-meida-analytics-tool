@@ -265,29 +265,31 @@ export const VideoEmbeddingsEditor: React.FC<VideoEmbeddingsEditorProps> = ({
           left: 0,
           right: 0,
           bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          backgroundColor: 'rgba(0, 0, 0, 0.75)',
+          backdropFilter: 'blur(4px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           zIndex: 1000,
-          padding: '1rem',
+          padding: '1.5rem',
         }}
         onClick={onClose}
       >
         <div
           style={{
             backgroundColor: '#161b22',
-            borderRadius: '8px',
+            borderRadius: '12px',
             width: '100%',
             maxWidth: '600px',
-            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.5)',
+            boxShadow: '0 24px 48px rgba(0, 0, 0, 0.5)',
             border: '1px solid #30363d',
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif'
           }}
           onClick={(e) => e.stopPropagation()}
         >
           <div
             style={{
-              padding: '1.5rem',
+              padding: '1.5rem 2rem',
               borderBottom: '1px solid #30363d',
               display: 'flex',
               justifyContent: 'space-between',
@@ -295,11 +297,11 @@ export const VideoEmbeddingsEditor: React.FC<VideoEmbeddingsEditorProps> = ({
             }}
           >
             <div>
-              <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 600, color: '#c9d1d9' }}>
-                No Script Found
+              <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 600, color: '#f0f6fc' }}>
+                Script Selection
               </h2>
               {videoTitle && (
-                <p style={{ margin: '0.5rem 0 0 0', color: '#8b949e', fontSize: '0.875rem' }}>
+                <p style={{ margin: '0.4rem 0 0 0', color: '#8b949e', fontSize: '0.875rem' }}>
                   {videoTitle}
                 </p>
               )}
@@ -309,48 +311,54 @@ export const VideoEmbeddingsEditor: React.FC<VideoEmbeddingsEditorProps> = ({
               style={{
                 background: 'none',
                 border: 'none',
-                fontSize: '1.5rem',
+                fontSize: '2rem',
                 cursor: 'pointer',
                 color: '#8b949e',
-                padding: '0.5rem',
-                lineHeight: 1,
+                padding: '0.25rem',
+                lineHeight: 0.5,
+                transition: 'color 0.2s'
               }}
+              onMouseEnter={(e) => e.currentTarget.style.color = '#c9d1d9'}
+              onMouseLeave={(e) => e.currentTarget.style.color = '#8b949e'}
             >
               ×
             </button>
           </div>
 
-          <div style={{ padding: '1.5rem' }}>
-            <p style={{ color: '#c9d1d9', marginBottom: '1.5rem', fontSize: '0.875rem' }}>
-              This video doesn't have a script yet. Would you like to assign an existing pending script, or create a new one?
+          <div style={{ padding: '2rem' }}>
+            <p style={{ color: '#c9d1d9', marginBottom: '1.75rem', fontSize: '0.9375rem', lineHeight: '1.6' }}>
+              This video doesn't have an assigned script yet. You can link an existing pending script or create a new one.
             </p>
 
             {error && (
               <div
                 style={{
-                  padding: '1rem',
-                  backgroundColor: '#5a1f1f',
+                  padding: '1rem 1.25rem',
+                  backgroundColor: '#3d1b1b',
                   color: '#ff7b72',
-                  borderRadius: '4px',
-                  marginBottom: '1rem',
-                  border: '1px solid #da3633',
+                  borderRadius: '8px',
+                  marginBottom: '1.5rem',
+                  border: '1px solid #6e2121',
+                  fontSize: '0.9rem'
                 }}
               >
-                {error}
+                ⚠️ {error}
               </div>
             )}
 
-            <div style={{ marginBottom: '1.5rem' }}>
+            <div style={{ marginBottom: '2rem' }}>
               <label
                 style={{
                   display: 'block',
-                  marginBottom: '0.5rem',
-                  fontWeight: 500,
-                  color: '#c9d1d9',
-                  fontSize: '0.875rem',
+                  marginBottom: '0.75rem',
+                  fontWeight: 600,
+                  color: '#8b949e',
+                  fontSize: '0.75rem',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em'
                 }}
               >
-                Assign Existing Pending Script:
+                Link Existing Pending Script
               </label>
               <select
                 value={selectedUnassignedId}
@@ -358,22 +366,24 @@ export const VideoEmbeddingsEditor: React.FC<VideoEmbeddingsEditorProps> = ({
                 disabled={linking}
                 style={{
                   width: '100%',
-                  padding: '0.75rem',
+                  padding: '0.75rem 1rem',
                   backgroundColor: '#0d1117',
                   color: '#c9d1d9',
                   border: '1px solid #30363d',
-                  borderRadius: '4px',
-                  fontSize: '0.875rem',
+                  borderRadius: '6px',
+                  fontSize: '0.9rem',
                   cursor: linking ? 'not-allowed' : 'pointer',
-                  marginBottom: '0.75rem',
+                  marginBottom: '1rem',
+                  outline: 'none',
+                  transition: 'border-color 0.2s'
                 }}
+                onFocus={(e) => e.target.style.borderColor = '#1f6feb'}
+                onBlur={(e) => e.target.style.borderColor = '#30363d'}
               >
-                <option value="">Select an unassigned script...</option>
+                <option value="">Select a script...</option>
                 {unassignedEmbeddings.map((embedding) => (
                   <option key={embedding.id} value={embedding.id}>
-                    Script #{embedding.id.substring(0, 8)}
-                    {embedding.topic && ` - ${embedding.topic.substring(0, 50)}`}
-                    {embedding.hook && ` (${embedding.hook.substring(0, 30)}...)`}
+                    #{embedding.id.substring(0, 8)} {embedding.topic ? `- ${embedding.topic.substring(0, 40)}` : ''}
                   </option>
                 ))}
               </select>
@@ -383,31 +393,24 @@ export const VideoEmbeddingsEditor: React.FC<VideoEmbeddingsEditorProps> = ({
                 style={{
                   width: '100%',
                   padding: '0.75rem 1rem',
-                  backgroundColor: linking ? '#6c757d' : '#238636',
-                  color: 'white',
+                  backgroundColor: !selectedUnassignedId || linking ? '#21262d' : '#1f6feb',
+                  color: !selectedUnassignedId || linking ? '#484f58' : 'white',
                   border: 'none',
-                  borderRadius: '4px',
+                  borderRadius: '6px',
                   cursor: !selectedUnassignedId || linking ? 'not-allowed' : 'pointer',
-                  fontSize: '0.875rem',
-                  fontWeight: 500,
+                  fontSize: '0.9rem',
+                  fontWeight: 600,
+                  transition: 'all 0.2s'
                 }}
               >
-                {linking ? 'Assigning...' : 'Assign Selected Script'}
+                {linking ? 'Linking...' : 'Link Selected Script'}
               </button>
             </div>
 
-            <div
-              style={{
-                padding: '1rem',
-                backgroundColor: '#0d1117',
-                borderRadius: '4px',
-                border: '1px solid #30363d',
-                marginBottom: '1rem',
-              }}
-            >
-              <p style={{ color: '#8b949e', fontSize: '0.75rem', margin: '0 0 0.5rem 0' }}>
-                OR
-              </p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
+              <div style={{ flex: 1, height: '1px', backgroundColor: '#30363d' }}></div>
+              <span style={{ color: '#484f58', fontSize: '0.75rem', fontWeight: 600 }}>OR</span>
+              <div style={{ flex: 1, height: '1px', backgroundColor: '#30363d' }}></div>
             </div>
 
             <button
@@ -416,16 +419,24 @@ export const VideoEmbeddingsEditor: React.FC<VideoEmbeddingsEditorProps> = ({
               style={{
                 width: '100%',
                 padding: '0.75rem 1rem',
-                backgroundColor: '#21262d',
-                color: '#c9d1d9',
-                border: '1px solid #30363d',
-                borderRadius: '4px',
+                backgroundColor: '#238636',
+                color: 'white',
+                border: 'none',
+                borderRadius: '6px',
                 cursor: linking ? 'not-allowed' : 'pointer',
-                fontSize: '0.875rem',
-                fontWeight: 500,
+                fontSize: '0.9rem',
+                fontWeight: 600,
+                transition: 'all 0.2s',
+                boxShadow: '0 2px 8px rgba(35, 134, 54, 0.2)'
+              }}
+              onMouseEnter={(e) => {
+                if (!linking) e.currentTarget.style.backgroundColor = '#2ea043';
+              }}
+              onMouseLeave={(e) => {
+                if (!linking) e.currentTarget.style.backgroundColor = '#238636';
               }}
             >
-              Create New Script
+              + Create Blank Script
             </button>
           </div>
         </div>
@@ -441,31 +452,33 @@ export const VideoEmbeddingsEditor: React.FC<VideoEmbeddingsEditorProps> = ({
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        backgroundColor: 'rgba(0, 0, 0, 0.75)',
+        backdropFilter: 'blur(4px)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         zIndex: 1000,
-        padding: '1rem',
+        padding: '1.5rem',
       }}
       onClick={onClose}
     >
       <div
         style={{
           backgroundColor: '#161b22',
-          borderRadius: '8px',
+          borderRadius: '12px',
           width: '100%',
-          maxWidth: '800px',
+          maxWidth: '850px',
           maxHeight: '90vh',
           overflow: 'auto',
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.5)',
+          boxShadow: '0 24px 48px rgba(0, 0, 0, 0.6)',
           border: '1px solid #30363d',
+          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif'
         }}
         onClick={(e) => e.stopPropagation()}
       >
         <div
           style={{
-            padding: '1.5rem',
+            padding: '1.5rem 2rem',
             borderBottom: '1px solid #30363d',
             display: 'flex',
             justifyContent: 'space-between',
@@ -477,16 +490,16 @@ export const VideoEmbeddingsEditor: React.FC<VideoEmbeddingsEditorProps> = ({
           }}
         >
           <div>
-            <h2 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 600, color: '#c9d1d9' }}>
-              Edit Video Embeddings
+            <h2 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 600, color: '#f0f6fc' }}>
+              Edit Video Script
             </h2>
             {videoTitle && (
-              <p style={{ margin: '0.5rem 0 0 0', color: '#8b949e', fontSize: '0.875rem' }}>
+              <p style={{ margin: '0.5rem 0 0 0', color: '#8b949e', fontSize: '0.875rem', fontWeight: 500 }}>
                 {videoTitle}
               </p>
             )}
-            <p style={{ margin: '0.25rem 0 0 0', color: '#8b949e', fontSize: '0.75rem' }}>
-              Video ID: {videoId}
+            <p style={{ margin: '0.25rem 0 0 0', color: '#484f58', fontSize: '0.75rem' }}>
+              ID: {videoId}
             </p>
           </div>
           <button
@@ -494,66 +507,77 @@ export const VideoEmbeddingsEditor: React.FC<VideoEmbeddingsEditorProps> = ({
             style={{
               background: 'none',
               border: 'none',
-              fontSize: '1.5rem',
+              fontSize: '2rem',
               cursor: 'pointer',
               color: '#8b949e',
-              padding: '0.5rem',
-              lineHeight: 1,
+              padding: '0.25rem',
+              lineHeight: 0.5,
+              transition: 'color 0.2s'
             }}
+            onMouseEnter={(e) => e.currentTarget.style.color = '#c9d1d9'}
+            onMouseLeave={(e) => e.currentTarget.style.color = '#8b949e'}
           >
             ×
           </button>
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div style={{ padding: '1.5rem' }}>
+          <div style={{ padding: '2rem' }}>
             {loading ? (
-              <div style={{ textAlign: 'center', padding: '2rem' }}>
-                <p>Loading embedding data...</p>
+              <div style={{ textAlign: 'center', padding: '3rem' }}>
+                <div style={{ animation: 'pulse 1.5s infinite', color: '#8b949e', fontSize: '1rem' }}>Loading script data...</div>
               </div>
             ) : (
               <>
                 {error && !loading && (
                   <div
                   style={{
-                    padding: '1rem',
-                    backgroundColor: '#5a1f1f',
+                    padding: '1rem 1.25rem',
+                    backgroundColor: '#3d1b1b',
                     color: '#ff7b72',
-                    borderRadius: '4px',
-                    marginBottom: '1rem',
-                    border: '1px solid #da3633',
+                    borderRadius: '8px',
+                    marginBottom: '1.5rem',
+                    border: '1px solid #6e2121',
+                    fontSize: '0.9rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.75rem'
                   }}
                   >
-                    {error}
+                    <span>⚠️</span> {error}
                   </div>
                 )}
 
                 {success && (
                   <div
                     style={{
-                      padding: '1rem',
+                      padding: '1rem 1.25rem',
                       backgroundColor: '#1a472a',
                       color: '#7ee787',
-                      borderRadius: '4px',
-                      marginBottom: '1rem',
+                      borderRadius: '8px',
+                      marginBottom: '1.5rem',
                       border: '1px solid #238636',
+                      fontSize: '0.9rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.75rem'
                     }}
                   >
-                    ✅ Successfully updated embedding!
+                    <span>✅</span> Successfully updated script!
                   </div>
                 )}
 
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
                   {textAreaFields.map((field) => (
                     <div key={field.key}>
                       <label
                         style={{
                           display: 'block',
-                          marginBottom: '0.5rem',
-                          fontWeight: 500,
+                          marginBottom: '0.6rem',
+                          fontWeight: 600,
                           color: '#c9d1d9',
-                          fontSize: '0.875rem',
+                          fontSize: '0.9rem',
                           textTransform: 'capitalize',
                         }}
                       >
@@ -564,16 +588,20 @@ export const VideoEmbeddingsEditor: React.FC<VideoEmbeddingsEditorProps> = ({
                         onChange={(e) => handleChange(field.key, e.target.value)}
                         style={{
                           width: '100%',
-                          minHeight: '80px',
-                          padding: '0.75rem',
+                          minHeight: field.key === 'script' ? '180px' : '90px',
+                          padding: '1rem',
                           border: '1px solid #30363d',
-                          borderRadius: '4px',
-                          fontSize: '0.875rem',
+                          borderRadius: '8px',
+                          fontSize: '0.9375rem',
                           fontFamily: 'inherit',
                           resize: 'vertical',
                           backgroundColor: '#0d1117',
                           color: '#c9d1d9',
+                          outline: 'none',
+                          transition: 'border-color 0.2s'
                         }}
+                        onFocus={(e) => e.target.style.borderColor = '#1f6feb'}
+                        onBlur={(e) => e.target.style.borderColor = '#30363d'}
                         placeholder={`Enter ${field.label.toLowerCase()}...`}
                       />
                     </div>
@@ -585,7 +613,7 @@ export const VideoEmbeddingsEditor: React.FC<VideoEmbeddingsEditorProps> = ({
 
           <div
             style={{
-              padding: '1.5rem',
+              padding: '1.5rem 2rem',
               borderTop: '1px solid #30363d',
               display: 'flex',
               justifyContent: 'space-between',
@@ -593,6 +621,7 @@ export const VideoEmbeddingsEditor: React.FC<VideoEmbeddingsEditorProps> = ({
               position: 'sticky',
               bottom: 0,
               backgroundColor: '#161b22',
+              zIndex: 10,
             }}
           >
             <button
@@ -600,44 +629,50 @@ export const VideoEmbeddingsEditor: React.FC<VideoEmbeddingsEditorProps> = ({
               onClick={handlePreviewJson}
               disabled={loading || saving}
               style={{
-                padding: '0.75rem 1.5rem',
-                backgroundColor: '#17a2b8',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
+                padding: '0.6rem 1.25rem',
+                backgroundColor: '#21262d',
+                color: '#c9d1d9',
+                border: '1px solid #30363d',
+                borderRadius: '6px',
                 cursor: loading || saving ? 'not-allowed' : 'pointer',
                 fontSize: '0.875rem',
-                fontWeight: 500,
-                transition: 'background-color 0.2s',
+                fontWeight: 600,
+                transition: 'all 0.2s',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem'
               }}
               onMouseEnter={(e) => {
                 if (!loading && !saving) {
-                  e.currentTarget.style.backgroundColor = '#138496';
+                  e.currentTarget.style.backgroundColor = '#30363d';
                 }
               }}
               onMouseLeave={(e) => {
                 if (!loading && !saving) {
-                  e.currentTarget.style.backgroundColor = '#17a2b8';
+                  e.currentTarget.style.backgroundColor = '#21262d';
                 }
               }}
             >
-              📄 Preview JSON
+              <span>📄</span> Preview Context
             </button>
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <div style={{ display: 'flex', gap: '0.75rem' }}>
               <button
                 type="button"
                 onClick={onClose}
                 disabled={saving}
                 style={{
-                  padding: '0.75rem 1.5rem',
-                  backgroundColor: '#6c757d',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '4px',
+                  padding: '0.6rem 1.25rem',
+                  backgroundColor: 'transparent',
+                  color: '#8b949e',
+                  border: '1px solid transparent',
+                  borderRadius: '6px',
                   cursor: saving ? 'not-allowed' : 'pointer',
-                  fontSize: '0.875rem',
-                  fontWeight: 500,
+                  fontSize: '0.9rem',
+                  fontWeight: 600,
+                  transition: 'all 0.2s'
                 }}
+                onMouseEnter={(e) => e.currentTarget.style.color = '#c9d1d9'}
+                onMouseLeave={(e) => e.currentTarget.style.color = '#8b949e'}
               >
                 Cancel
               </button>
@@ -645,18 +680,29 @@ export const VideoEmbeddingsEditor: React.FC<VideoEmbeddingsEditorProps> = ({
                 type="submit"
                 disabled={loading || saving}
                 style={{
-                  padding: '0.75rem 1.5rem',
-                  backgroundColor: saving ? '#6c757d' : '#007bff',
-                  color: 'white',
+                  padding: '0.6rem 2rem',
+                  backgroundColor: loading || saving ? '#21262d' : '#1f6feb',
+                  color: loading || saving ? '#484f58' : 'white',
                   border: 'none',
-                  borderRadius: '4px',
+                  borderRadius: '6px',
                   cursor: loading || saving ? 'not-allowed' : 'pointer',
-                  fontSize: '0.875rem',
-                  fontWeight: 500,
-                  transition: 'background-color 0.2s',
+                  fontSize: '0.9rem',
+                  fontWeight: 600,
+                  transition: 'all 0.2s',
+                  boxShadow: loading || saving ? 'none' : '0 2px 8px rgba(31, 111, 235, 0.3)'
+                }}
+                onMouseEnter={(e) => {
+                  if (!loading && !saving) {
+                    e.currentTarget.style.backgroundColor = '#388bfd';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!loading && !saving) {
+                    e.currentTarget.style.backgroundColor = '#1f6feb';
+                  }
                 }}
               >
-                {saving ? 'Updating...' : 'Update'}
+                {saving ? 'Saving...' : 'Save Script'}
               </button>
             </div>
           </div>

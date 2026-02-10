@@ -173,22 +173,35 @@ export const PendingEmbeddings: React.FC = () => {
   }
 
   return (
-    <div style={{ padding: '1.5rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-        <h2 style={{ fontSize: '1.75rem', fontWeight: 600, color: '#c9d1d9' }}>
+    <div style={{ 
+      padding: '1.5rem',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif'
+    }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
+        <h2 style={{ fontSize: '1.75rem', fontWeight: 600, color: '#c9d1d9', margin: 0 }}>
           Pending Scripts ({embeddings.length})
         </h2>
         <button
           onClick={handleCreateNew}
           style={{
-            padding: '0.5rem 1rem',
-            backgroundColor: '#238636',
+            padding: '0.6rem 1.25rem',
+            backgroundColor: '#A02B2B',
             color: 'white',
             border: 'none',
-            borderRadius: '4px',
+            borderRadius: '6px',
             cursor: 'pointer',
-            fontSize: '0.875rem',
-            fontWeight: 500,
+            fontSize: '0.9rem',
+            fontWeight: 600,
+            transition: 'all 0.2s',
+            boxShadow: '0 2px 8px rgba(35, 134, 54, 0.2)'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = '#2ea043';
+            e.currentTarget.style.transform = 'translateY(-1px)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = '#A02B2B';
+            e.currentTarget.style.transform = 'translateY(0)';
           }}
         >
           + Create New Script
@@ -198,15 +211,19 @@ export const PendingEmbeddings: React.FC = () => {
       {error && (
         <div
           style={{
-            padding: '1rem',
-            backgroundColor: '#5a1f1f',
+            padding: '1rem 1.25rem',
+            backgroundColor: '#3d1b1b',
             color: '#ff7b72',
-            borderRadius: '4px',
-            marginBottom: '1rem',
-            border: '1px solid #da3633',
+            borderRadius: '6px',
+            marginBottom: '1.5rem',
+            border: '1px solid #6e2121',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            fontSize: '0.9rem'
           }}
         >
-          {error}
+          <span>⚠️</span> {error}
         </div>
       )}
 
@@ -218,12 +235,13 @@ export const PendingEmbeddings: React.FC = () => {
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            backgroundColor: 'rgba(0, 0, 0, 0.75)',
+            backdropFilter: 'blur(4px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             zIndex: 1000,
-            padding: '1rem',
+            padding: '1.5rem',
           }}
           onClick={() => {
             setEditingId(null);
@@ -233,26 +251,30 @@ export const PendingEmbeddings: React.FC = () => {
           <div
             style={{
               backgroundColor: '#161b22',
-              borderRadius: '8px',
+              borderRadius: '12px',
               width: '100%',
-              maxWidth: '800px',
+              maxWidth: '850px',
               maxHeight: '90vh',
               overflow: 'auto',
-              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.5)',
+              boxShadow: '0 24px 48px rgba(0, 0, 0, 0.6)',
               border: '1px solid #30363d',
             }}
             onClick={(e) => e.stopPropagation()}
           >
             <div
               style={{
-                padding: '1.5rem',
+                padding: '1.5rem 2rem',
                 borderBottom: '1px solid #30363d',
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
+                position: 'sticky',
+                top: 0,
+                backgroundColor: '#161b22',
+                zIndex: 10,
               }}
             >
-              <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 600, color: '#c9d1d9' }}>
+              <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 600, color: '#f0f6fc' }}>
                 {editingId === 'new' ? 'Create New Script' : 'Edit Script'}
               </h3>
               <button
@@ -263,55 +285,59 @@ export const PendingEmbeddings: React.FC = () => {
                 style={{
                   background: 'none',
                   border: 'none',
-                  fontSize: '1.5rem',
+                  fontSize: '2rem',
                   cursor: 'pointer',
                   color: '#8b949e',
-                  padding: '0.5rem',
-                  lineHeight: 1,
+                  padding: '0.25rem',
+                  lineHeight: 0.5,
+                  transition: 'color 0.2s'
                 }}
+                onMouseEnter={(e) => e.currentTarget.style.color = '#c9d1d9'}
+                onMouseLeave={(e) => e.currentTarget.style.color = '#8b949e'}
               >
                 ×
               </button>
             </div>
 
-            <div style={{ padding: '1.5rem' }}>
+            <div style={{ padding: '2rem' }}>
               {/* Video Assignment Section in Edit Modal */}
               {isUnassigned(editingData.video_id) && availableVideos.length > 0 && (
                 <div
                   style={{
-                    padding: '1rem',
+                    padding: '1.25rem',
                     backgroundColor: '#0d1117',
-                    borderRadius: '4px',
+                    borderRadius: '10px',
                     border: '1px solid #30363d',
-                    marginBottom: '1.5rem',
+                    marginBottom: '2rem',
                   }}
                 >
                   <label
                     style={{
                       display: 'block',
-                      marginBottom: '0.5rem',
-                      fontWeight: 500,
+                      marginBottom: '0.75rem',
+                      fontWeight: 600,
                       color: '#c9d1d9',
-                      fontSize: '0.875rem',
+                      fontSize: '0.9rem',
                     }}
                   >
                     Assign to video (videos without scripts only):
                   </label>
-                  <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                  <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
                     <select
                       value={selectedVideoId}
                       onChange={(e) => setSelectedVideoId(e.target.value)}
                       disabled={assigningId === editingId}
                       style={{
                         flex: 1,
-                        minWidth: '200px',
-                        padding: '0.5rem',
+                        minWidth: '250px',
+                        padding: '0.6rem 1rem',
                         backgroundColor: '#21262d',
                         color: '#c9d1d9',
                         border: '1px solid #30363d',
-                        borderRadius: '4px',
-                        fontSize: '0.875rem',
+                        borderRadius: '6px',
+                        fontSize: '0.9rem',
                         cursor: assigningId === editingId ? 'not-allowed' : 'pointer',
+                        outline: 'none',
                       }}
                     >
                       <option value="">Select a video...</option>
@@ -325,32 +351,33 @@ export const PendingEmbeddings: React.FC = () => {
                       onClick={() => editingId && handleAssign(editingId)}
                       disabled={!selectedVideoId || assigningId === editingId}
                       style={{
-                        padding: '0.5rem 1rem',
-                        backgroundColor: assigningId === editingId ? '#6c757d' : '#238636',
-                        color: 'white',
+                        padding: '0.6rem 1.25rem',
+                        backgroundColor: !selectedVideoId || assigningId === editingId ? '#21262d' : '#1f6feb',
+                        color: !selectedVideoId || assigningId === editingId ? '#484f58' : 'white',
                         border: 'none',
-                        borderRadius: '4px',
+                        borderRadius: '6px',
                         cursor: !selectedVideoId || assigningId === editingId ? 'not-allowed' : 'pointer',
-                        fontSize: '0.875rem',
-                        fontWeight: 500,
+                        fontSize: '0.9rem',
+                        fontWeight: 600,
+                        transition: 'all 0.2s'
                       }}
                     >
-                      {assigningId === editingId ? 'Assigning...' : 'Assign'}
+                      {assigningId === editingId ? 'Assigning...' : 'Assign Video'}
                     </button>
                   </div>
                 </div>
               )}
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
                 {textAreaFields.map((field) => (
                   <div key={field.key}>
                     <label
                       style={{
                         display: 'block',
-                        marginBottom: '0.5rem',
-                        fontWeight: 500,
+                        marginBottom: '0.6rem',
+                        fontWeight: 600,
                         color: '#c9d1d9',
-                        fontSize: '0.875rem',
+                        fontSize: '0.9rem',
                         textTransform: 'capitalize',
                       }}
                     >
@@ -366,16 +393,20 @@ export const PendingEmbeddings: React.FC = () => {
                       }
                       style={{
                         width: '100%',
-                        minHeight: '80px',
-                        padding: '0.75rem',
+                        minHeight: field.key === 'script' ? '180px' : '90px',
+                        padding: '1rem',
                         border: '1px solid #30363d',
-                        borderRadius: '4px',
-                        fontSize: '0.875rem',
+                        borderRadius: '8px',
+                        fontSize: '0.9375rem',
                         fontFamily: 'inherit',
                         resize: 'vertical',
                         backgroundColor: '#0d1117',
                         color: '#c9d1d9',
+                        outline: 'none',
+                        transition: 'border-color 0.2s'
                       }}
+                      onFocus={(e) => e.target.style.borderColor = '#1f6feb'}
+                      onBlur={(e) => e.target.style.borderColor = '#30363d'}
                       placeholder={`Enter ${field.label.toLowerCase()}...`}
                     />
                   </div>
@@ -385,11 +416,14 @@ export const PendingEmbeddings: React.FC = () => {
 
             <div
               style={{
-                padding: '1.5rem',
+                padding: '1.5rem 2rem',
                 borderTop: '1px solid #30363d',
                 display: 'flex',
                 justifyContent: 'flex-end',
-                gap: '0.5rem',
+                gap: '0.75rem',
+                backgroundColor: '#161b22',
+                position: 'sticky',
+                bottom: 0,
               }}
             >
               <button
@@ -398,32 +432,39 @@ export const PendingEmbeddings: React.FC = () => {
                   setEditingData(null);
                 }}
                 style={{
-                  padding: '0.75rem 1.5rem',
-                  backgroundColor: '#6c757d',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '4px',
+                  padding: '0.6rem 1.25rem',
+                  backgroundColor: '#21262d',
+                  color: '#c9d1d9',
+                  border: '1px solid #30363d',
+                  borderRadius: '6px',
                   cursor: 'pointer',
-                  fontSize: '0.875rem',
-                  fontWeight: 500,
+                  fontSize: '0.9rem',
+                  fontWeight: 600,
+                  transition: 'all 0.2s'
                 }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#30363d'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#21262d'}
               >
                 Cancel
               </button>
               <button
                 onClick={handleSave}
                 style={{
-                  padding: '0.75rem 1.5rem',
+                  padding: '0.6rem 2rem',
                   backgroundColor: '#238636',
                   color: 'white',
                   border: 'none',
-                  borderRadius: '4px',
+                  borderRadius: '6px',
                   cursor: 'pointer',
-                  fontSize: '0.875rem',
-                  fontWeight: 500,
+                  fontSize: '0.9rem',
+                  fontWeight: 600,
+                  transition: 'all 0.2s',
+                  boxShadow: '0 2px 8px rgba(35, 134, 54, 0.3)'
                 }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#2ea043'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#238636'}
               >
-                Save
+                Save Script
               </button>
             </div>
           </div>
@@ -433,169 +474,231 @@ export const PendingEmbeddings: React.FC = () => {
       {embeddings.length === 0 ? (
         <div
           style={{
-            padding: '2rem',
+            padding: '4rem 2rem',
             textAlign: 'center',
             color: '#8b949e',
-            backgroundColor: '#0d1117',
-            borderRadius: '4px',
+            backgroundColor: '#161b22',
+            borderRadius: '12px',
             border: '1px solid #30363d',
           }}
         >
-          No pending scripts. Create a new script for a future video.
+          <div style={{ fontSize: '3rem', marginBottom: '1.5rem', opacity: 0.1 }}>📄</div>
+          <p style={{ fontSize: '1.1rem', color: '#c9d1d9', marginBottom: '0.5rem' }}>No pending scripts</p>
+          <p style={{ fontSize: '0.9rem' }}>Create a new script for a future video to get started.</p>
         </div>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))', gap: '1.5rem' }}>
           {embeddings.map((embedding) => (
             <div
               key={embedding.id}
               style={{
                 backgroundColor: '#161b22',
-                borderRadius: '8px',
+                borderRadius: '12px',
                 padding: '1.5rem',
                 border: '1px solid #30363d',
+                display: 'flex',
+                flexDirection: 'column',
+                transition: 'all 0.2s',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = '#484f58';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 6px 16px rgba(0,0,0,0.2)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = '#30363d';
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1rem' }}>
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                    <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 600, color: '#c9d1d9' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1.25rem' }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
+                    <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 600, color: '#f0f6fc', letterSpacing: '0.2px' }}>
                       Script #{embedding.id.substring(0, 8)}
                     </h3>
-                    {!isUnassigned(embedding.video_id) && (
+                    {!isUnassigned(embedding.video_id) ? (
                       <span
                         style={{
-                          padding: '0.25rem 0.5rem',
+                          padding: '0.2rem 0.6rem',
                           backgroundColor: '#1a472a',
                           color: '#7ee787',
-                          borderRadius: '4px',
-                          fontSize: '0.75rem',
+                          borderRadius: '20px',
+                          fontSize: '0.7rem',
+                          fontWeight: 600,
+                          border: '1px solid #238636'
                         }}
                       >
-                        Assigned
+                        ASSIGNED
+                      </span>
+                    ) : (
+                      <span
+                        style={{
+                          padding: '0.2rem 0.6rem',
+                          backgroundColor: '#3d2b11',
+                          color: '#e3b341',
+                          borderRadius: '20px',
+                          fontSize: '0.7rem',
+                          fontWeight: 600,
+                          border: '1px solid #9e6a03'
+                        }}
+                      >
+                        PENDING
                       </span>
                     )}
                   </div>
                   {embedding.topic && (
-                    <div style={{ color: '#8b949e', fontSize: '0.875rem', marginBottom: '0.25rem' }}>
-                      <strong>Topic:</strong> {embedding.topic}
+                    <div style={{ color: '#c9d1d9', fontSize: '0.9375rem', fontWeight: 500, marginBottom: '0.5rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {embedding.topic}
                     </div>
                   )}
                   {embedding.hook && (
-                    <div style={{ color: '#8b949e', fontSize: '0.875rem' }}>
-                      <strong>Hook:</strong> {embedding.hook.substring(0, 100)}
-                      {embedding.hook.length > 100 && '...'}
+                    <div style={{ color: '#8b949e', fontSize: '0.8125rem', lineHeight: '1.5' }}>
+                      <strong style={{ color: '#7d8590' }}>Hook:</strong> {embedding.hook.substring(0, 120)}
+                      {embedding.hook.length > 120 && '...'}
                     </div>
                   )}
                 </div>
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <div style={{ display: 'flex', gap: '0.5rem', marginLeft: '1rem' }}>
                   <button
                     onClick={() => handleEdit(embedding)}
+                    title="Edit"
                     style={{
-                      padding: '0.4rem 0.8rem',
+                      padding: '0.5rem',
                       backgroundColor: '#21262d',
                       color: '#c9d1d9',
                       border: '1px solid #30363d',
-                      borderRadius: '4px',
+                      borderRadius: '6px',
                       cursor: 'pointer',
-                      fontSize: '0.75rem',
+                      fontSize: '0.875rem',
+                      transition: 'all 0.2s',
                     }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#30363d'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#21262d'}
                   >
                     Edit
                   </button>
-                  {!isUnassigned(embedding.video_id) && (
-                    <button
-                      onClick={() => handleUnassign(embedding.id)}
-                      style={{
-                        padding: '0.4rem 0.8rem',
-                        backgroundColor: '#5a1f1f',
-                        color: '#ff7b72',
-                        border: '1px solid #da3633',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        fontSize: '0.75rem',
-                      }}
-                    >
-                      Unassign
-                    </button>
-                  )}
                   <button
                     onClick={() => handleDelete(embedding.id)}
+                    title="Delete"
                     style={{
-                      padding: '0.4rem 0.8rem',
-                      backgroundColor: '#5a1f1f',
+                      padding: '0.5rem',
+                      backgroundColor: '#21262d',
                       color: '#ff7b72',
-                      border: '1px solid #da3633',
-                      borderRadius: '4px',
+                      border: '1px solid #30363d',
+                      borderRadius: '6px',
                       cursor: 'pointer',
-                      fontSize: '0.75rem',
+                      fontSize: '0.875rem',
+                      transition: 'all 0.2s',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = '#3d1b1b';
+                      e.currentTarget.style.borderColor = '#6e2121';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = '#21262d';
+                      e.currentTarget.style.borderColor = '#30363d';
                     }}
                   >
-                    Delete
+                    <span style={{ opacity: 0.3 }}>🗑️</span>
                   </button>
                 </div>
               </div>
 
               {/* Assign Video Section */}
-              {isUnassigned(embedding.video_id) && (
+              {isUnassigned(embedding.video_id) ? (
                 <div
                   style={{
                     padding: '1rem',
                     backgroundColor: '#0d1117',
-                    borderRadius: '4px',
+                    borderRadius: '8px',
                     border: '1px solid #30363d',
-                    marginTop: '1rem',
+                    marginTop: 'auto',
                   }}
                 >
-                  <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
-                    <label style={{ color: '#c9d1d9', fontSize: '0.875rem', fontWeight: 500 }}>
-                      Assign to video (videos without scripts only):
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    <label style={{ color: '#8b949e', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      Assign to live video
                     </label>
-                    <select
-                      value={selectedVideoId}
-                      onChange={(e) => setSelectedVideoId(e.target.value)}
-                      disabled={assigningId === embedding.id}
-                      style={{
-                        flex: 1,
-                        minWidth: '200px',
-                        padding: '0.5rem',
-                        backgroundColor: '#21262d',
-                        color: '#c9d1d9',
-                        border: '1px solid #30363d',
-                        borderRadius: '4px',
-                        fontSize: '0.875rem',
-                        cursor: assigningId === embedding.id ? 'not-allowed' : 'pointer',
-                      }}
-                    >
-                      <option value="">Select a video...</option>
-                      {availableVideos.map((video) => (
-                        <option key={video.video_id} value={video.video_id}>
-                          {video.title || video.video_id} ({video.view_count?.toLocaleString() || 0} views)
-                        </option>
-                      ))}
-                    </select>
-                    <button
-                      onClick={() => handleAssign(embedding.id)}
-                      disabled={!selectedVideoId || assigningId === embedding.id}
-                      style={{
-                        padding: '0.5rem 1rem',
-                        backgroundColor: assigningId === embedding.id ? '#6c757d' : '#238636',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: !selectedVideoId || assigningId === embedding.id ? 'not-allowed' : 'pointer',
-                        fontSize: '0.875rem',
-                        fontWeight: 500,
-                      }}
-                    >
-                      {assigningId === embedding.id ? 'Assigning...' : 'Assign'}
-                    </button>
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      <select
+                        value={selectedVideoId}
+                        onChange={(e) => setSelectedVideoId(e.target.value)}
+                        disabled={assigningId === embedding.id}
+                        style={{
+                          flex: 1,
+                          minWidth: 0,
+                          padding: '0.4rem 0.75rem',
+                          backgroundColor: '#21262d',
+                          color: '#c9d1d9',
+                          border: '1px solid #30363d',
+                          borderRadius: '6px',
+                          fontSize: '0.8125rem',
+                          cursor: assigningId === embedding.id ? 'not-allowed' : 'pointer',
+                        }}
+                      >
+                        <option value="">Select video...</option>
+                        {availableVideos.map((video) => (
+                          <option key={video.video_id} value={video.video_id}>
+                            {video.title || video.video_id}
+                          </option>
+                        ))}
+                      </select>
+                      <button
+                        onClick={() => handleAssign(embedding.id)}
+                        disabled={!selectedVideoId || assigningId === embedding.id}
+                        style={{
+                          padding: '0.4rem 0.75rem',
+                          backgroundColor: !selectedVideoId || assigningId === embedding.id ? '#161b22' : '#1f6feb',
+                          color: !selectedVideoId || assigningId === embedding.id ? '#484f58' : 'white',
+                          border: 'none',
+                          borderRadius: '6px',
+                          cursor: !selectedVideoId || assigningId === embedding.id ? 'not-allowed' : 'pointer',
+                          fontSize: '0.8125rem',
+                          fontWeight: 600,
+                          transition: 'all 0.2s'
+                        }}
+                      >
+                        {assigningId === embedding.id ? '...' : 'Link'}
+                      </button>
+                    </div>
                   </div>
                 </div>
-              )}
-
-              {!isUnassigned(embedding.video_id) && (
-                <div style={{ marginTop: '0.5rem', color: '#8b949e', fontSize: '0.875rem' }}>
-                  Assigned to: <strong>{embedding.video_id}</strong>
+              ) : (
+                <div 
+                  style={{ 
+                    marginTop: 'auto', 
+                    padding: '0.75rem 1rem', 
+                    backgroundColor: '#0d1117', 
+                    borderRadius: '8px', 
+                    border: '1px solid #23863644',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                  }}
+                >
+                  <div style={{ color: '#8b949e', fontSize: '0.8125rem' }}>
+                    Linked to: <strong style={{ color: '#58a6ff' }}>{embedding.video_id}</strong>
+                  </div>
+                  <button
+                    onClick={() => handleUnassign(embedding.id)}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: '#ff7b72',
+                      fontSize: '0.75rem',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      padding: '0.25rem 0.5rem',
+                      borderRadius: '4px',
+                      transition: 'all 0.2s'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#3d1b1b'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                  >
+                    Unlink
+                  </button>
                 </div>
               )}
             </div>

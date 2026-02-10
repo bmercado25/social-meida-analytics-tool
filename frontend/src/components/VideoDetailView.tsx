@@ -233,32 +233,34 @@ export const VideoDetailView: React.FC<VideoDetailViewProps> = ({ video, onClose
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        backgroundColor: 'rgba(0, 0, 0, 0.75)',
+        backdropFilter: 'blur(4px)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         zIndex: 1000,
-        padding: '1rem',
+        padding: '1.5rem',
       }}
       onClick={onClose}
     >
       <div
         style={{
           backgroundColor: '#161b22',
-          borderRadius: '8px',
+          borderRadius: '12px',
           width: '100%',
           maxWidth: '1000px',
           maxHeight: '90vh',
           overflow: 'auto',
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.5)',
+          boxShadow: '0 24px 48px rgba(0, 0, 0, 0.6)',
           border: '1px solid #30363d',
+          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif'
         }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div
           style={{
-            padding: '1.5rem',
+            padding: '1.5rem 2rem',
             borderBottom: '1px solid #30363d',
             display: 'flex',
             justifyContent: 'space-between',
@@ -270,11 +272,11 @@ export const VideoDetailView: React.FC<VideoDetailViewProps> = ({ video, onClose
           }}
         >
           <div>
-            <h2 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 600, color: '#c9d1d9' }}>
-              Video Details
+            <h2 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 600, color: '#f0f6fc' }}>
+              Video Intelligence
             </h2>
             {video.title && (
-              <p style={{ margin: '0.5rem 0 0 0', color: '#8b949e', fontSize: '0.875rem' }}>
+              <p style={{ margin: '0.4rem 0 0 0', color: '#8b949e', fontSize: '0.875rem', fontWeight: 500 }}>
                 {video.title}
               </p>
             )}
@@ -284,85 +286,108 @@ export const VideoDetailView: React.FC<VideoDetailViewProps> = ({ video, onClose
             style={{
               background: 'none',
               border: 'none',
-              fontSize: '1.5rem',
+              fontSize: '2rem',
               cursor: 'pointer',
               color: '#8b949e',
-              padding: '0.5rem',
-              lineHeight: 1,
+              padding: '0.25rem',
+              lineHeight: 0.5,
+              transition: 'color 0.2s'
             }}
+            onMouseEnter={(e) => e.currentTarget.style.color = '#c9d1d9'}
+            onMouseLeave={(e) => e.currentTarget.style.color = '#8b949e'}
           >
             ×
           </button>
         </div>
 
         {/* Content */}
-        <div style={{ padding: '1.5rem' }}>
+        <div style={{ padding: '2rem' }}>
           {loading ? (
-            <div style={{ textAlign: 'center', padding: '2rem' }}>
-              <p>Loading embedding data...</p>
+            <div style={{ textAlign: 'center', padding: '3rem' }}>
+              <div style={{ animation: 'pulse 1.5s infinite', color: '#8b949e', fontSize: '1rem' }}>Fetching video intelligence...</div>
             </div>
           ) : (
             <>
               {error && (
                 <div
                 style={{
-                  padding: '1rem',
-                  backgroundColor: '#3d2817',
-                  color: '#d29922',
-                  borderRadius: '4px',
-                  marginBottom: '1rem',
-                  border: '1px solid #bb8009',
+                  padding: '1rem 1.25rem',
+                  backgroundColor: '#3d2b11',
+                  color: '#e3b341',
+                  borderRadius: '8px',
+                  marginBottom: '1.5rem',
+                  border: '1px solid #9e6a03',
+                  fontSize: '0.9rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.75rem'
                 }}
                 >
-                  ⚠️ {error}
+                  <span>⚠️</span> {error}
                 </div>
               )}
 
               {/* Video Sections */}
               {videoSections.map((section) => (
-                <div key={section.title} style={{ marginBottom: '2rem' }}>
+                <div key={section.title} style={{ marginBottom: '2.5rem' }}>
                   <h3
                     style={{
-                      fontSize: '1.1rem',
-                      fontWeight: 600,
-                      color: '#c9d1d9',
-                      marginBottom: '1rem',
+                      fontSize: '0.8rem',
+                      fontWeight: 700,
+                      color: '#8b949e',
+                      marginBottom: '1.25rem',
                       paddingBottom: '0.5rem',
-                      borderBottom: '2px solid #30363d',
+                      borderBottom: '1px solid #30363d',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.1em'
                     }}
                   >
                     {section.title}
                   </h3>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.5rem' }}>
                     {section.fields.map((field) => {
                       // Special handling for thumbnail URL
                       if (field.key === 'thumbnail_url' && video[field.key]) {
                         return (
-                          <div key={field.key} style={{ marginBottom: '1rem', gridColumn: '1 / -1' }}>
+                          <div key={field.key} style={{ gridColumn: '1 / -1' }}>
                             <div
                           style={{
                             fontSize: '0.75rem',
-                            fontWeight: 600,
-                            color: '#8b949e',
+                            fontWeight: 700,
+                            color: '#484f58',
                             textTransform: 'uppercase',
-                            letterSpacing: '0.5px',
-                            marginBottom: '0.25rem',
+                            letterSpacing: '0.05em',
+                            marginBottom: '0.75rem',
                           }}
                             >
                               {field.label}
                             </div>
-                            <img
-                              src={video[field.key]}
-                              alt="Thumbnail"
-                              style={{
-                                maxWidth: '300px',
-                                maxHeight: '200px',
-                              borderRadius: '4px',
-                              border: '1px solid #30363d',
-                            }}
-                            />
-                            <div style={{ marginTop: '0.5rem', fontSize: '0.75rem', color: '#6c757d', wordBreak: 'break-all' }}>
-                              {video[field.key]}
+                            <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'flex-start', flexWrap: 'wrap' }}>
+                              <img
+                                src={video[field.key]}
+                                alt="Thumbnail"
+                                style={{
+                                  maxWidth: '320px',
+                                  borderRadius: '8px',
+                                  border: '1px solid #30363d',
+                                  boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
+                                }}
+                              />
+                              <div style={{ flex: 1, minWidth: '200px' }}>
+                                <div style={{ fontSize: '0.8rem', color: '#8b949e', marginBottom: '0.5rem', fontWeight: 500 }}>Source URL:</div>
+                                <div style={{ 
+                                  padding: '0.75rem', 
+                                  backgroundColor: '#0d1117', 
+                                  borderRadius: '6px', 
+                                  border: '1px solid #30363d',
+                                  fontSize: '0.75rem', 
+                                  color: '#58a6ff', 
+                                  wordBreak: 'break-all',
+                                  fontFamily: 'monospace'
+                                }}>
+                                  {video[field.key]}
+                                </div>
+                              </div>
                             </div>
                           </div>
                         );
@@ -378,34 +403,40 @@ export const VideoDetailView: React.FC<VideoDetailViewProps> = ({ video, onClose
               ))}
 
               {/* Views Growth Chart */}
-              <div style={{ marginBottom: '2rem' }}>
+              <div style={{ marginBottom: '2.5rem' }}>
                 <h3
                   style={{
-                    fontSize: '1.1rem',
-                    fontWeight: 600,
-                    color: '#495057',
-                    marginBottom: '1rem',
+                    fontSize: '0.8rem',
+                    fontWeight: 700,
+                    color: '#8b949e',
+                    marginBottom: '1.25rem',
                     paddingBottom: '0.5rem',
-                    borderBottom: '2px solid #dee2e6',
+                    borderBottom: '1px solid #30363d',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.1em'
                   }}
                 >
-                  View Growth Over Time
+                  View Performance History
                 </h3>
                 <div
                   style={{
                     backgroundColor: '#0d1117',
-                    borderRadius: '8px',
+                    borderRadius: '12px',
                     padding: '1.5rem',
                     border: '1px solid #30363d',
-                    boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+                    boxShadow: 'inset 0 2px 10px rgba(0,0,0,0.2)',
                   }}
                 >
                   {statsLoading ? (
-                    <div style={{ textAlign: 'center', padding: '2rem', color: '#8b949e' }}>
-                      Loading chart data...
+                    <div style={{ textAlign: 'center', padding: '3rem', color: '#484f58', fontSize: '0.9rem' }}>
+                      <div style={{ animation: 'pulse 1.5s infinite' }}>Analyzing historical data...</div>
                     </div>
+                  ) : statsData.length > 0 ? (
+                    <ViewsChart data={statsData} width={920} height={320} />
                   ) : (
-                    <ViewsChart data={statsData} width={900} height={300} />
+                    <div style={{ textAlign: 'center', padding: '3rem', color: '#484f58', fontSize: '0.9rem' }}>
+                      No historical performance data available yet.
+                    </div>
                   )}
                 </div>
               </div>
@@ -413,20 +444,22 @@ export const VideoDetailView: React.FC<VideoDetailViewProps> = ({ video, onClose
               {/* Embedding Sections */}
               {embedding ? (
                 embeddingSections.map((section) => (
-                  <div key={section.title} style={{ marginBottom: '2rem' }}>
+                  <div key={section.title} style={{ marginBottom: '2.5rem' }}>
                     <h3
                       style={{
-                        fontSize: '1.1rem',
-                        fontWeight: 600,
-                        color: '#495057',
-                        marginBottom: '1rem',
+                        fontSize: '0.8rem',
+                        fontWeight: 700,
+                        color: '#8b949e',
+                        marginBottom: '1.25rem',
                         paddingBottom: '0.5rem',
-                        borderBottom: '2px solid #dee2e6',
+                        borderBottom: '1px solid #30363d',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.1em'
                       }}
                     >
                       {section.title}
                     </h3>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
                       {section.fields.map((field) => (
                         <div key={field.key} style={{ gridColumn: field.isLarge ? '1 / -1' : 'auto' }}>
                           {renderField(field.label, embedding[field.key], field.isLarge)}
@@ -436,70 +469,21 @@ export const VideoDetailView: React.FC<VideoDetailViewProps> = ({ video, onClose
                   </div>
                 ))
               ) : (
-                <div style={{ marginBottom: '2rem', padding: '1rem', backgroundColor: '#0d1117', borderRadius: '4px', border: '1px solid #30363d' }}>
-                  <h3
-                    style={{
-                      fontSize: '1.1rem',
-                      fontWeight: 600,
-                      color: '#c9d1d9',
-                      marginBottom: '0.5rem',
-                    }}
-                  >
-                    Embedding Data
+                <div style={{ 
+                  marginBottom: '2.5rem', 
+                  padding: '2rem', 
+                  backgroundColor: '#1c2128', 
+                  borderRadius: '12px', 
+                  border: '1px solid #30363d',
+                  textAlign: 'center'
+                }}>
+                  <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>📝</div>
+                  <h3 style={{ fontSize: '1rem', fontWeight: 600, color: '#f0f6fc', marginBottom: '0.5rem' }}>
+                    No Script Intelligence
                   </h3>
-                  <p style={{ margin: 0, color: '#8b949e' }}>
-                    No embedding data found for this video. Use "Edit Embeddings" to create one.
+                  <p style={{ margin: 0, color: '#8b949e', fontSize: '0.9rem', maxWidth: '400px', margin: '0 auto' }}>
+                    Pattern analysis is not available for this video because no script or embedding data has been added yet.
                   </p>
-                </div>
-              )}
-
-              {/* Other Video Fields */}
-              {otherVideoFields.length > 0 && (
-                <div style={{ marginBottom: '2rem' }}>
-                  <h3
-                    style={{
-                      fontSize: '1.1rem',
-                      fontWeight: 600,
-                      color: '#c9d1d9',
-                      marginBottom: '1rem',
-                      paddingBottom: '0.5rem',
-                      borderBottom: '2px solid #30363d',
-                    }}
-                  >
-                    Additional Video Information
-                  </h3>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
-                    {otherVideoFields.map((field) => (
-                      <div key={field.key}>
-                        {renderField(field.label, video[field.key])}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Other Embedding Fields */}
-              {otherEmbeddingFields.length > 0 && (
-                <div style={{ marginBottom: '2rem' }}>
-                  <h3
-                    style={{
-                      fontSize: '1.1rem',
-                      fontWeight: 600,
-                      color: '#c9d1d9',
-                      marginBottom: '1rem',
-                      paddingBottom: '0.5rem',
-                      borderBottom: '2px solid #30363d',
-                    }}
-                  >
-                    Additional Embedding Information
-                  </h3>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
-                    {otherEmbeddingFields.map((field) => (
-                      <div key={field.key}>
-                        {renderField(field.label, embedding[field.key])}
-                      </div>
-                    ))}
-                  </div>
                 </div>
               )}
             </>

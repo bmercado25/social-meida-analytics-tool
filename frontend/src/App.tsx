@@ -32,7 +32,6 @@ function App() {
   const [connectionStatus, setConnectionStatus] = useState<{
     connected: boolean;
     message: string;
-    rowCount?: number;
   } | null>(null);
   const [selectedVideo, setSelectedVideo] = useState<YouTubeVideo | null>(null);
   const [detailVideo, setDetailVideo] = useState<YouTubeVideo | null>(null);
@@ -49,7 +48,6 @@ function App() {
       setConnectionStatus({
         connected: response.data.success,
         message: response.data.message,
-        rowCount: response.data.rowCount,
       });
     } catch (err: any) {
       setConnectionStatus({
@@ -99,42 +97,61 @@ function App() {
 
   return (
     <div style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto', backgroundColor: '#0d1117', minHeight: '100vh' }}>
-      <header style={{ marginBottom: '2rem' }}>
-        <h1 style={{ color: '#c9d1d9' }}>Marketing Analytic Ver. 1.0.1</h1>
-        <p style={{ color: '#8b949e' }}>Connected to Supabase via API</p>
+      <header style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div>
+          <h1 style={{ color: '#c9d1d9', margin: 0 }}>PolyMedium Marketing Internal Tooling <span style={{ fontSize: '0.9rem', color: '#8b949e', fontWeight: 400 }}>(1.01)</span></h1>
+        </div>
+        <div style={{ display: 'flex', gap: '0.75rem' }}>
+          {connectionStatus && (
+            <div
+              style={{
+                padding: '0.4rem 0.75rem',
+                backgroundColor: connectionStatus.connected ? '#1a472a33' : '#3d1b1b',
+                color: connectionStatus.connected ? '#7ee787' : '#ff7b72',
+                borderRadius: '6px',
+                border: `1px solid ${connectionStatus.connected ? '#238636' : '#6e2121'}`,
+                fontSize: '0.75rem',
+                fontWeight: 600,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.4rem'
+              }}
+            >
+              <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: connectionStatus.connected ? '#3fb950' : '#f85149' }}></div>
+              DB: {connectionStatus.connected ? 'ONLINE' : 'OFFLINE'}
+            </div>
+          )}
+          <HealthCheckBadge />
+        </div>
       </header>
 
-      {/* Connection Status */}
-      {connectionStatus && (
-        <div
-          style={{
-            padding: '1rem',
-            backgroundColor: connectionStatus.connected ? '#1a472a' : '#5a1f1f',
-            color: connectionStatus.connected ? '#7ee787' : '#ff7b72',
-            borderRadius: '4px',
-            marginBottom: '1rem',
-            border: `1px solid ${connectionStatus.connected ? '#238636' : '#da3633'}`,
-          }}
-        >
-          <strong>Supabase Connection:</strong> {connectionStatus.message}
-          {connectionStatus.rowCount !== undefined && (
-            <span> | Table has {connectionStatus.rowCount} row(s)</span>
-          )}
-        </div>
-      )}
-
-      <div style={{ marginBottom: '1rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+      <div style={{ marginBottom: '1.5rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
         <button
           onClick={handleRetrieve}
           disabled={retrieving}
           style={{
-            padding: '0.5rem 1rem',
-            backgroundColor: retrieving ? '#6c757d' : '#ff6b35',
-            color: 'white',
+            padding: '0.6rem 1.25rem',
+            backgroundColor: retrieving ? '#21262d' : '#ff6b35',
+            color: retrieving ? '#484f58' : 'white',
             border: 'none',
-            borderRadius: '4px',
+            borderRadius: '6px',
             cursor: retrieving ? 'not-allowed' : 'pointer',
             fontWeight: 600,
+            fontSize: '0.9rem',
+            transition: 'all 0.2s',
+            boxShadow: retrieving ? 'none' : '0 2px 4px rgba(255, 107, 53, 0.2)'
+          }}
+          onMouseEnter={(e) => {
+            if (!retrieving) {
+              e.currentTarget.style.backgroundColor = '#ff8c5a';
+              e.currentTarget.style.transform = 'translateY(-1px)';
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (!retrieving) {
+              e.currentTarget.style.backgroundColor = '#ff6b35';
+              e.currentTarget.style.transform = 'translateY(0)';
+            }
           }}
         >
           {retrieving ? 'Retrieving...' : 'Retrieve Shorts'}
@@ -143,12 +160,21 @@ function App() {
           onClick={fetchVideos}
           disabled={loading}
           style={{
-            padding: '0.5rem 1rem',
-            backgroundColor: '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
+            padding: '0.6rem 1.25rem',
+            backgroundColor: '#21262d',
+            color: '#c9d1d9',
+            border: '1px solid #30363d',
+            borderRadius: '6px',
             cursor: loading ? 'not-allowed' : 'pointer',
+            fontSize: '0.9rem',
+            fontWeight: 500,
+            transition: 'all 0.2s'
+          }}
+          onMouseEnter={(e) => {
+            if (!loading) e.currentTarget.style.backgroundColor = '#30363d';
+          }}
+          onMouseLeave={(e) => {
+            if (!loading) e.currentTarget.style.backgroundColor = '#21262d';
           }}
         >
           {loading ? 'Loading...' : 'Refresh Table'}
@@ -156,13 +182,18 @@ function App() {
         <button
           onClick={testConnection}
           style={{
-            padding: '0.5rem 1rem',
-            backgroundColor: '#28a745',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
+            padding: '0.6rem 1.25rem',
+            backgroundColor: '#21262d',
+            color: '#c9d1d9',
+            border: '1px solid #30363d',
+            borderRadius: '6px',
             cursor: 'pointer',
+            fontSize: '0.9rem',
+            fontWeight: 500,
+            transition: 'all 0.2s'
           }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#30363d'}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#21262d'}
         >
           Test Connection
         </button>
@@ -202,24 +233,25 @@ function App() {
       <div
         style={{
           display: 'flex',
-          gap: '0.5rem',
-          marginBottom: '1.5rem',
-          borderBottom: '2px solid #30363d',
+          gap: '0.25rem',
+          marginBottom: '2rem',
+          borderBottom: '1px solid #30363d',
+          padding: '0 0.5rem',
         }}
       >
         <button
           onClick={() => setActiveTab('table')}
           style={{
-            padding: '0.75rem 1.5rem',
+            padding: '0.75rem 1.25rem',
             backgroundColor: 'transparent',
-            color: activeTab === 'table' ? '#58a6ff' : '#8b949e',
+            color: activeTab === 'table' ? '#f0f6fc' : '#8b949e',
             border: 'none',
-            borderBottom: activeTab === 'table' ? '3px solid #58a6ff' : '3px solid transparent',
+            borderBottom: activeTab === 'table' ? '2px solid #f78166' : '2px solid transparent',
             cursor: 'pointer',
-            fontSize: '1rem',
+            fontSize: '0.95rem',
             fontWeight: activeTab === 'table' ? 600 : 400,
             transition: 'all 0.2s',
-            marginBottom: '-2px',
+            marginBottom: '-1px',
           }}
         >
           Table View
@@ -227,33 +259,33 @@ function App() {
         <button
           onClick={() => setActiveTab('analytics')}
           style={{
-            padding: '0.75rem 1.5rem',
+            padding: '0.75rem 1.25rem',
             backgroundColor: 'transparent',
-            color: activeTab === 'analytics' ? '#58a6ff' : '#8b949e',
+            color: activeTab === 'analytics' ? '#f0f6fc' : '#8b949e',
             border: 'none',
-            borderBottom: activeTab === 'analytics' ? '3px solid #58a6ff' : '3px solid transparent',
+            borderBottom: activeTab === 'analytics' ? '2px solid #f78166' : '2px solid transparent',
             cursor: 'pointer',
-            fontSize: '1rem',
+            fontSize: '0.95rem',
             fontWeight: activeTab === 'analytics' ? 600 : 400,
             transition: 'all 0.2s',
-            marginBottom: '-2px',
+            marginBottom: '-1px',
           }}
         >
-          Analytics Dashboard
+          Analytics
         </button>
         <button
           onClick={() => setActiveTab('prompt')}
           style={{
-            padding: '0.75rem 1.5rem',
+            padding: '0.75rem 1.25rem',
             backgroundColor: 'transparent',
-            color: activeTab === 'prompt' ? '#58a6ff' : '#8b949e',
+            color: activeTab === 'prompt' ? '#f0f6fc' : '#8b949e',
             border: 'none',
-            borderBottom: activeTab === 'prompt' ? '3px solid #58a6ff' : '3px solid transparent',
+            borderBottom: activeTab === 'prompt' ? '2px solid #f78166' : '2px solid transparent',
             cursor: 'pointer',
-            fontSize: '1rem',
+            fontSize: '0.95rem',
             fontWeight: activeTab === 'prompt' ? 600 : 400,
             transition: 'all 0.2s',
-            marginBottom: '-2px',
+            marginBottom: '-1px',
           }}
         >
           Prompt Assistant
@@ -261,16 +293,16 @@ function App() {
         <button
           onClick={() => setActiveTab('pending')}
           style={{
-            padding: '0.75rem 1.5rem',
+            padding: '0.75rem 1.25rem',
             backgroundColor: 'transparent',
-            color: activeTab === 'pending' ? '#58a6ff' : '#8b949e',
+            color: activeTab === 'pending' ? '#f0f6fc' : '#8b949e',
             border: 'none',
-            borderBottom: activeTab === 'pending' ? '3px solid #58a6ff' : '3px solid transparent',
+            borderBottom: activeTab === 'pending' ? '2px solid #f78166' : '2px solid transparent',
             cursor: 'pointer',
-            fontSize: '1rem',
+            fontSize: '0.95rem',
             fontWeight: activeTab === 'pending' ? 600 : 400,
             transition: 'all 0.2s',
-            marginBottom: '-2px',
+            marginBottom: '-1px',
           }}
         >
           Pending Scripts
@@ -278,16 +310,16 @@ function App() {
         <button
           onClick={() => setActiveTab('chatbot')}
           style={{
-            padding: '0.75rem 1.5rem',
+            padding: '0.75rem 1.25rem',
             backgroundColor: 'transparent',
-            color: activeTab === 'chatbot' ? '#58a6ff' : '#8b949e',
+            color: activeTab === 'chatbot' ? '#f0f6fc' : '#8b949e',
             border: 'none',
-            borderBottom: activeTab === 'chatbot' ? '3px solid #58a6ff' : '3px solid transparent',
+            borderBottom: activeTab === 'chatbot' ? '2px solid #f78166' : '2px solid transparent',
             cursor: 'pointer',
-            fontSize: '1rem',
+            fontSize: '0.95rem',
             fontWeight: activeTab === 'chatbot' ? 600 : 400,
             transition: 'all 0.2s',
-            marginBottom: '-2px',
+            marginBottom: '-1px',
           }}
         >
           Chatbot
@@ -300,7 +332,7 @@ function App() {
         <>
           {activeTab === 'table' && (
             <div>
-              <h2 style={{ color: '#c9d1d9', marginBottom: '1rem' }}>YouTube Shorts ({data.length} videos)</h2>
+              <h2 style={{ color: '#c9d1d9', marginBottom: '1rem' }}>Shorts ({data.length} videos)</h2>
               <DataTable
                 data={data}
                 tableName="youtube_videos"
@@ -310,7 +342,7 @@ function App() {
                 onActionClick={(row) => {
                   setSelectedVideo(row);
                 }}
-                actionLabel="Edit Embeddings"
+                actionLabel="Edit EMB"
               />
             </div>
           )}
@@ -332,11 +364,6 @@ function App() {
           )}
         </>
       )}
-
-      <div style={{ marginTop: '2rem', padding: '1rem', backgroundColor: '#161b22', borderRadius: '4px', border: '1px solid #30363d' }}>
-        <h3 style={{ color: '#c9d1d9', marginBottom: '0.5rem' }}>API Health Check</h3>
-        <HealthCheck />
-      </div>
 
       {selectedVideo && (
         <VideoEmbeddingsEditor
@@ -361,7 +388,7 @@ function App() {
   );
 }
 
-function HealthCheck() {
+function HealthCheckBadge() {
   const [health, setHealth] = useState<{ status: string; timestamp?: string } | null>(null);
 
   useEffect(() => {
@@ -371,10 +398,26 @@ function HealthCheck() {
       .catch((err) => setHealth({ status: 'error', timestamp: err.message }));
   }, []);
 
+  const isOnline = health?.status === 'ok';
+
   return (
-    <div>
-      <p style={{ color: '#8b949e', margin: '0.25rem 0' }}>Status: {health?.status || 'checking...'}</p>
-      {health?.timestamp && <p style={{ color: '#8b949e', margin: '0.25rem 0' }}>Timestamp: {health.timestamp}</p>}
+    <div
+      style={{
+        padding: '0.4rem 0.75rem',
+        backgroundColor: isOnline ? '#1a472a33' : '#3d1b1b',
+        color: isOnline ? '#7ee787' : '#ff7b72',
+        borderRadius: '6px',
+        border: `1px solid ${isOnline ? '#238636' : '#6e2121'}`,
+        fontSize: '0.75rem',
+        fontWeight: 600,
+        display: 'flex',
+        alignItems: 'center',
+        gap: '0.4rem'
+      }}
+      title={health?.timestamp ? `Last checked: ${health.timestamp}` : 'Checking API health...'}
+    >
+      <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: isOnline ? '#3fb950' : '#f85149' }}></div>
+      API: {isOnline ? 'ONLINE' : (health?.status === 'error' ? 'OFFLINE' : 'CHECKING...')}
     </div>
   );
 }

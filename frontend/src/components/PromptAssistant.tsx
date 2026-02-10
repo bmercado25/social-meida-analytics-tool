@@ -190,7 +190,10 @@ ${contextJson}`;
   };
 
   return (
-    <div style={{ padding: '1.5rem' }}>
+    <div style={{ 
+      padding: '1.5rem',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif'
+    }}>
       <h2 style={{ marginBottom: '2rem', fontSize: '1.75rem', fontWeight: 600, color: '#c9d1d9' }}>
         Prompt Assistant
       </h2>
@@ -200,60 +203,64 @@ ${contextJson}`;
         <label
           style={{
             display: 'block',
-            marginBottom: '0.5rem',
+            marginBottom: '0.75rem',
             fontWeight: 600,
             color: '#c9d1d9',
-            fontSize: '0.875rem',
+            fontSize: '0.9rem',
           }}
         >
-          Your Prompt
+          Your Objective
         </label>
         <textarea
           value={userPrompt}
           onChange={(e) => setUserPrompt(e.target.value)}
-          placeholder="Enter your marketing prompt here..."
+          placeholder="What are we trying to achieve? (e.g., 'Generate 3 high-converting hooks for a video about SaaS efficiency')"
           style={{
             width: '100%',
             minHeight: '120px',
-            padding: '0.75rem',
+            padding: '1rem',
             border: '1px solid #30363d',
-            borderRadius: '4px',
-            fontSize: '0.875rem',
+            borderRadius: '8px',
+            fontSize: '0.9375rem',
             fontFamily: 'inherit',
             resize: 'vertical',
             backgroundColor: '#0d1117',
             color: '#c9d1d9',
+            outline: 'none',
+            transition: 'border-color 0.2s'
           }}
+          onFocus={(e) => e.target.style.borderColor = '#1f6feb'}
+          onBlur={(e) => e.target.style.borderColor = '#30363d'}
         />
       </div>
 
       {/* Video Selection */}
       <div style={{ marginBottom: '2rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.75rem' }}>
           <label
             style={{
               fontWeight: 600,
               color: '#c9d1d9',
-              fontSize: '0.875rem',
+              fontSize: '0.9rem',
             }}
           >
-            Select Videos for Context ({selectedVideoIds.size} selected)
+            Pattern Context ({selectedVideoIds.size} selected)
           </label>
-          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
             {/* Sort Dropdown */}
             <div style={{ position: 'relative' }}>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
                 style={{
-                  padding: '0.4rem 0.8rem',
-                  paddingRight: '2rem',
+                  padding: '0.5rem 1rem',
+                  paddingRight: '2.5rem',
                   backgroundColor: '#21262d',
                   color: '#c9d1d9',
                   border: '1px solid #30363d',
-                  borderRadius: '4px',
+                  borderRadius: '6px',
                   cursor: 'pointer',
-                  fontSize: '0.75rem',
+                  fontSize: '0.8rem',
                   appearance: 'none',
                 }}
               >
@@ -266,7 +273,7 @@ ${contextJson}`;
               <span
                 style={{
                   position: 'absolute',
-                  right: '0.5rem',
+                  right: '0.75rem',
                   top: '50%',
                   transform: 'translateY(-50%)',
                   pointerEvents: 'none',
@@ -280,14 +287,14 @@ ${contextJson}`;
             <button
               onClick={selectAllVideos}
               style={{
-                padding: '0.4rem 0.8rem',
-                backgroundColor: '#238636',
+                padding: '0.5rem 1rem',
+                backgroundColor: '#C03838',
                 color: 'white',
                 border: 'none',
-                borderRadius: '4px',
+                borderRadius: '6px',
                 cursor: 'pointer',
-                fontSize: '0.75rem',
-                fontWeight: 500,
+                fontSize: '0.8rem',
+                fontWeight: 600,
               }}
             >
               Select All
@@ -295,14 +302,14 @@ ${contextJson}`;
             <button
               onClick={deselectAllVideos}
               style={{
-                padding: '0.4rem 0.8rem',
-                backgroundColor: '#da3633',
+                padding: '0.5rem 1rem',
+                backgroundColor: '#252535',
                 color: 'white',
                 border: 'none',
-                borderRadius: '4px',
+                borderRadius: '6px',
                 cursor: 'pointer',
-                fontSize: '0.75rem',
-                fontWeight: 500,
+                fontSize: '0.8rem',
+                fontWeight: 600,
               }}
             >
               Deselect All
@@ -315,14 +322,15 @@ ${contextJson}`;
             maxHeight: '300px',
             overflowY: 'auto',
             border: '1px solid #30363d',
-            borderRadius: '4px',
+            borderRadius: '8px',
             backgroundColor: '#0d1117',
             padding: '0.5rem',
+            boxShadow: 'inset 0 2px 10px rgba(0,0,0,0.2)'
           }}
         >
           {sortedVideos.length === 0 ? (
-            <div style={{ padding: '1rem', textAlign: 'center', color: '#8b949e' }}>
-              No videos available
+            <div style={{ padding: '2rem', textAlign: 'center', color: '#8b949e' }}>
+              No videos available in library
             </div>
           ) : (
             sortedVideos.map((video) => (
@@ -331,31 +339,37 @@ ${contextJson}`;
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  padding: '0.75rem',
+                  padding: '0.75rem 1rem',
                   cursor: 'pointer',
-                  borderRadius: '4px',
+                  borderRadius: '6px',
                   marginBottom: '0.25rem',
-                  transition: 'background-color 0.2s',
+                  transition: 'background-color 0.15s',
+                  backgroundColor: selectedVideoIds.has(video.video_id) ? '#1f6feb22' : 'transparent',
+                  border: `1px solid ${selectedVideoIds.has(video.video_id) ? '#1f6feb44' : 'transparent'}`
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#21262d';
+                  if (!selectedVideoIds.has(video.video_id)) {
+                    e.currentTarget.style.backgroundColor = '#21262d';
+                  }
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
+                  if (!selectedVideoIds.has(video.video_id)) {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }
                 }}
               >
                 <input
                   type="checkbox"
                   checked={selectedVideoIds.has(video.video_id)}
                   onChange={() => toggleVideoSelection(video.video_id)}
-                  style={{ marginRight: '0.75rem', cursor: 'pointer' }}
+                  style={{ marginRight: '1rem', cursor: 'pointer', width: '16px', height: '16px' }}
                 />
-                <div style={{ flex: 1 }}>
-                  <div style={{ color: '#c9d1d9', fontSize: '0.875rem', fontWeight: 500 }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ color: '#c9d1d9', fontSize: '0.9375rem', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {video.title || video.video_id}
                   </div>
-                  <div style={{ color: '#8b949e', fontSize: '0.75rem', marginTop: '0.25rem' }}>
-                    {video.view_count?.toLocaleString() || 0} views • {video.engagement_rate ? (video.engagement_rate * 100).toFixed(2) + '%' : 'N/A'} engagement
+                  <div style={{ color: '#8b949e', fontSize: '0.8rem', marginTop: '0.25rem' }}>
+                    {video.view_count?.toLocaleString() || 0} views • {video.engagement_rate ? (video.engagement_rate * 100).toFixed(2) + '%' : 'N/A'} eng.
                   </div>
                 </div>
               </label>
@@ -366,108 +380,129 @@ ${contextJson}`;
 
       {/* Output */}
       <div style={{ marginBottom: '2rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
           <label
             style={{
               fontWeight: 600,
               color: '#c9d1d9',
-              fontSize: '0.875rem',
+              fontSize: '0.9rem',
             }}
           >
-            Generated Output
+            Generated Context Stack
           </label>
           <button
             id="copy-output-btn"
             onClick={copyOutput}
             disabled={!output || loading}
             style={{
-              padding: '0.5rem 1rem',
-              backgroundColor: '#21262d',
-              color: '#c9d1d9',
+              padding: '0.6rem 1.25rem',
+              backgroundColor: output && !loading ? '#21262d' : '#161b22',
+              color: output && !loading ? '#c9d1d9' : '#484f58',
               border: '1px solid #30363d',
-              borderRadius: '4px',
+              borderRadius: '6px',
               cursor: output && !loading ? 'pointer' : 'not-allowed',
               fontSize: '0.875rem',
-              fontWeight: 500,
-              transition: 'background-color 0.2s',
+              fontWeight: 600,
+              transition: 'all 0.2s',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem'
             }}
           >
-            📋 Copy Output
+            Copy
           </button>
         </div>
 
         {loading ? (
-          <div style={{ padding: '2rem', textAlign: 'center', color: '#8b949e' }}>
-            Loading context data...
+          <div style={{ padding: '3rem', textAlign: 'center', color: '#8b949e', backgroundColor: '#0d1117', borderRadius: '8px', border: '1px solid #30363d' }}>
+            <div style={{ animation: 'pulse 1.5s infinite', fontSize: '1rem' }}>Building context stack...</div>
           </div>
         ) : !userPrompt.trim() ? (
           <div
             style={{
-              padding: '2rem',
+              padding: '3rem',
               textAlign: 'center',
               color: '#8b949e',
               backgroundColor: '#0d1117',
-              borderRadius: '4px',
+              borderRadius: '8px',
               border: '1px solid #30363d',
+              fontSize: '0.9375rem'
             }}
           >
-            Enter a prompt and select videos to generate output
+            Enter your objective above and select videos to generate a pattern-aware prompt
           </div>
         ) : selectedVideoIds.size === 0 ? (
           <div
             style={{
-              padding: '2rem',
+              padding: '3rem',
               textAlign: 'center',
               color: '#8b949e',
               backgroundColor: '#0d1117',
-              borderRadius: '4px',
+              borderRadius: '8px',
               border: '1px solid #30363d',
+              fontSize: '0.9375rem'
             }}
           >
-            Select at least one video to generate context
+            Select at least one video to provide pattern data
           </div>
         ) : (
-          <pre
-            style={{
-              margin: 0,
-              padding: '1rem',
-              backgroundColor: '#0d1117',
-              color: '#c9d1d9',
-              borderRadius: '4px',
-              overflow: 'auto',
-              fontSize: '0.875rem',
-              lineHeight: '1.5',
-              fontFamily: 'Monaco, Menlo, "Ubuntu Mono", monospace',
-              border: '1px solid #30363d',
-              maxHeight: '500px',
-              whiteSpace: 'pre-wrap',
-              wordBreak: 'break-word',
-            }}
-          >
-            {output}
-          </pre>
+          <div style={{ position: 'relative' }}>
+            <pre
+              style={{
+                margin: 0,
+                padding: '1.25rem',
+                backgroundColor: '#0d1117',
+                color: '#c9d1d9',
+                borderRadius: '8px',
+                overflow: 'auto',
+                fontSize: '0.875rem',
+                lineHeight: '1.6',
+                fontFamily: 'SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace',
+                border: '1px solid #30363d',
+                maxHeight: '500px',
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-word',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
+              }}
+            >
+              {output}
+            </pre>
+            <div style={{ 
+              position: 'absolute', 
+              bottom: '1rem', 
+              right: '1rem', 
+              fontSize: '0.7rem', 
+              color: '#484f58', 
+              backgroundColor: 'rgba(13, 17, 23, 0.8)',
+              padding: '0.2rem 0.5rem',
+              borderRadius: '4px'
+            }}>
+              {output.length.toLocaleString()} characters
+            </div>
+          </div>
         )}
       </div>
 
       {/* Info Box */}
       <div
         style={{
-          padding: '1rem',
+          padding: '1.25rem',
           backgroundColor: '#1c2128',
-          borderRadius: '4px',
+          borderRadius: '8px',
           border: '1px solid #30363d',
         }}
       >
-        <div style={{ fontSize: '0.75rem', color: '#8b949e', lineHeight: '1.6' }}>
-          <strong style={{ color: '#c9d1d9' }}>How it works:</strong>
-          <br />
-          1. Enter your marketing prompt in the text field above
-          <br />
-          2. Select one or more videos from your library to use as context
-          <br />
-          3. The output will combine your prompt, the meta prompt, and the JSON context from selected videos
-          <br />
-          4. Copy the output and use it with your AI assistant (ChatGPT, Claude, etc.)
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          <div style={{ fontSize: '0.85rem', color: '#8b949e', lineHeight: '1.6' }}>
+            <strong style={{ color: '#c9d1d9', display: 'block', marginBottom: '0.5rem' }}>How to use this context:</strong>
+            1. Describe what you want to create (e.g., a script for a new video).
+            <br />
+            2. Select high-performing videos that represent the "vibe" or "patterns" you want to replicate.
+            <br />
+            3. Copy the generated stack and paste it into ChatGPT, Claude, or your preferred LLM.
+            <br />
+            4. The assistant will use the provided JSON as "ground truth" for hooks, topics, and styles.
+          </div>
         </div>
       </div>
     </div>

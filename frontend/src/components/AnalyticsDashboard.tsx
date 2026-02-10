@@ -43,8 +43,11 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ videos }
   };
 
   return (
-    <div style={{ padding: '1.5rem' }}>
-      <h2 style={{ marginBottom: '2rem', fontSize: '1.75rem', fontWeight: 600, color: '#c9d1d9' }}>
+    <div style={{ 
+      padding: '1.5rem',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif'
+    }}>
+      <h2 style={{ marginBottom: '2rem', fontSize: '1.75rem', fontWeight: 600, color: '#f0f6fc'}}>
         Channel Analytics
       </h2>
 
@@ -52,45 +55,55 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ videos }
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
           gap: '1.5rem',
-          marginBottom: '2rem',
+          marginBottom: '2.5rem',
         }}
       >
         {/* Total Views Card */}
         <div
           style={{
             backgroundColor: '#161b22',
-            borderRadius: '8px',
-            padding: '1.5rem',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+            borderRadius: '12px',
+            padding: '1.75rem',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
             border: '1px solid #30363d',
+            transition: 'transform 0.2s, border-color 0.2s',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-4px)';
+            e.currentTarget.style.borderColor = '#58a6ff66';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.borderColor = '#30363d';
           }}
         >
           <div
             style={{
-              fontSize: '0.875rem',
-              fontWeight: 600,
+              fontSize: '0.7rem',
+              fontWeight: 700,
               color: '#8b949e',
               textTransform: 'uppercase',
-              letterSpacing: '0.5px',
-              marginBottom: '0.5rem',
+              letterSpacing: '0.1em',
+              marginBottom: '1rem',
             }}
           >
-            Total Channel Views
+            Total Views
           </div>
           <div
             style={{
-              fontSize: '2rem',
+              fontSize: '2.25rem',
               fontWeight: 700,
               color: '#58a6ff',
-              marginBottom: '0.25rem',
+              marginBottom: '0.5rem',
+              letterSpacing: '-0.02em'
             }}
           >
             {formatNumber(totalViews)}
           </div>
-          <div style={{ fontSize: '0.75rem', color: '#8b949e' }}>
-            {totalViews.toLocaleString()} total views
+          <div style={{ fontSize: '0.8rem', color: '#484f58', fontWeight: 500 }}>
+            {totalViews.toLocaleString()} absolute
           </div>
         </div>
 
@@ -98,36 +111,46 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ videos }
         <div
           style={{
             backgroundColor: '#161b22',
-            borderRadius: '8px',
-            padding: '1.5rem',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+            borderRadius: '12px',
+            padding: '1.75rem',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
             border: '1px solid #30363d',
+            transition: 'transform 0.2s, border-color 0.2s',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-4px)';
+            e.currentTarget.style.borderColor = '#7ee78766';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.borderColor = '#30363d';
           }}
         >
           <div
             style={{
-              fontSize: '0.875rem',
-              fontWeight: 600,
+              fontSize: '0.7rem',
+              fontWeight: 700,
               color: '#8b949e',
               textTransform: 'uppercase',
-              letterSpacing: '0.5px',
-              marginBottom: '0.5rem',
+              letterSpacing: '0.1em',
+              marginBottom: '1rem',
             }}
           >
             Total Likes
           </div>
           <div
             style={{
-              fontSize: '2rem',
+              fontSize: '2.25rem',
               fontWeight: 700,
-              color: '#7ee787',
-              marginBottom: '0.25rem',
+              color: '#3fb950',
+              marginBottom: '0.5rem',
+              letterSpacing: '-0.02em'
             }}
           >
             {formatNumber(totalLikes)}
           </div>
-          <div style={{ fontSize: '0.75rem', color: '#6c757d' }}>
-            {totalLikes.toLocaleString()} total likes
+          <div style={{ fontSize: '0.8rem', color: '#484f58', fontWeight: 500 }}>
+            {totalLikes.toLocaleString()} absolute
           </div>
         </div>
 
@@ -135,36 +158,46 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ videos }
         <div
           style={{
             backgroundColor: '#161b22',
-            borderRadius: '8px',
-            padding: '1.5rem',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+            borderRadius: '12px',
+            padding: '1.75rem',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
             border: '1px solid #30363d',
+            transition: 'transform 0.2s, border-color 0.2s',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-4px)';
+            e.currentTarget.style.borderColor = '#a371f766';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.borderColor = '#30363d';
           }}
         >
           <div
             style={{
-              fontSize: '0.875rem',
-              fontWeight: 600,
+              fontSize: '0.7rem',
+              fontWeight: 700,
               color: '#8b949e',
               textTransform: 'uppercase',
-              letterSpacing: '0.5px',
-              marginBottom: '0.5rem',
+              letterSpacing: '0.1em',
+              marginBottom: '1rem',
             }}
           >
             Total Comments
           </div>
           <div
             style={{
-              fontSize: '2rem',
+              fontSize: '2.25rem',
               fontWeight: 700,
-              color: '#79c0ff',
-              marginBottom: '0.25rem',
+              color: '#a371f7',
+              marginBottom: '0.5rem',
+              letterSpacing: '-0.02em'
             }}
           >
             {formatNumber(totalComments)}
           </div>
-          <div style={{ fontSize: '0.75rem', color: '#6c757d' }}>
-            {totalComments.toLocaleString()} total comments
+          <div style={{ fontSize: '0.8rem', color: '#484f58', fontWeight: 500 }}>
+            {totalComments.toLocaleString()} absolute
           </div>
         </div>
 
@@ -172,35 +205,45 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ videos }
         <div
           style={{
             backgroundColor: '#161b22',
-            borderRadius: '8px',
-            padding: '1.5rem',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+            borderRadius: '12px',
+            padding: '1.75rem',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
             border: '1px solid #30363d',
+            transition: 'transform 0.2s, border-color 0.2s',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-4px)';
+            e.currentTarget.style.borderColor = '#d2992266';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.borderColor = '#30363d';
           }}
         >
           <div
             style={{
-              fontSize: '0.875rem',
-              fontWeight: 600,
+              fontSize: '0.7rem',
+              fontWeight: 700,
               color: '#8b949e',
               textTransform: 'uppercase',
-              letterSpacing: '0.5px',
-              marginBottom: '0.5rem',
+              letterSpacing: '0.1em',
+              marginBottom: '1rem',
             }}
           >
-            Avg Engagement Rate
+            Avg Engagement
           </div>
           <div
             style={{
-              fontSize: '2rem',
+              fontSize: '2.25rem',
               fontWeight: 700,
               color: '#d29922',
-              marginBottom: '0.25rem',
+              marginBottom: '0.5rem',
+              letterSpacing: '-0.02em'
             }}
           >
             {formatPercentage(avgEngagementRate)}
           </div>
-          <div style={{ fontSize: '0.75rem', color: '#6c757d' }}>
+          <div style={{ fontSize: '0.8rem', color: '#484f58', fontWeight: 500 }}>
             Across {videosWithEngagement.length} videos
           </div>
         </div>
@@ -209,35 +252,45 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ videos }
         <div
           style={{
             backgroundColor: '#161b22',
-            borderRadius: '8px',
-            padding: '1.5rem',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+            borderRadius: '12px',
+            padding: '1.75rem',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
             border: '1px solid #30363d',
+            transition: 'transform 0.2s, border-color 0.2s',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-4px)';
+            e.currentTarget.style.borderColor = '#f0f6fc33';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.borderColor = '#30363d';
           }}
         >
           <div
             style={{
-              fontSize: '0.875rem',
-              fontWeight: 600,
+              fontSize: '0.7rem',
+              fontWeight: 700,
               color: '#8b949e',
               textTransform: 'uppercase',
-              letterSpacing: '0.5px',
-              marginBottom: '0.5rem',
+              letterSpacing: '0.1em',
+              marginBottom: '1rem',
             }}
           >
-            Total Videos
+            Inventory
           </div>
           <div
             style={{
-              fontSize: '2rem',
+              fontSize: '2.25rem',
               fontWeight: 700,
-              color: '#bc8cff',
-              marginBottom: '0.25rem',
+              color: '#f0f6fc',
+              marginBottom: '0.5rem',
+              letterSpacing: '-0.02em'
             }}
           >
             {totalVideos}
           </div>
-          <div style={{ fontSize: '0.75rem', color: '#6c757d' }}>
+          <div style={{ fontSize: '0.8rem', color: '#484f58', fontWeight: 500 }}>
             Videos in database
           </div>
         </div>
@@ -246,52 +299,52 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ videos }
       {/* Additional Stats Section */}
       <div
         style={{
-          backgroundColor: '#161b22',
-          borderRadius: '8px',
-          padding: '1.5rem',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-          border: '1px solid #dee2e6',
+          backgroundColor: '#0d1117',
+          borderRadius: '12px',
+          padding: '2rem',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
+          border: '1px solid #30363d',
         }}
       >
-        <h3 style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 600, color: '#c9d1d9' }}>
-          Additional Statistics
+        <h3 style={{ marginBottom: '1.5rem', fontSize: '1.1rem', fontWeight: 600, color: '#f0f6fc', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <span style={{ fontSize: '1.25rem' }}></span> Distribution Metrics
         </h3>
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: '1rem',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+            gap: '2rem',
           }}
         >
-          <div>
-            <div style={{ fontSize: '0.75rem', color: '#8b949e', marginBottom: '0.25rem' }}>
-              Average Views per Video
+          <div style={{ padding: '0 1rem', borderLeft: '3px solid #30363d' }}>
+            <div style={{ fontSize: '0.7rem', color: '#8b949e', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>
+              Avg Views / Video
             </div>
-            <div style={{ fontSize: '1.25rem', fontWeight: 600, color: '#c9d1d9' }}>
+            <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#c9d1d9' }}>
               {totalVideos > 0 ? formatNumber(totalViews / totalVideos) : '0'}
             </div>
           </div>
-          <div>
-            <div style={{ fontSize: '0.75rem', color: '#8b949e', marginBottom: '0.25rem' }}>
-              Average Likes per Video
+          <div style={{ padding: '0 1rem', borderLeft: '3px solid #30363d' }}>
+            <div style={{ fontSize: '0.7rem', color: '#8b949e', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>
+              Avg Likes / Video
             </div>
-            <div style={{ fontSize: '1.25rem', fontWeight: 600, color: '#c9d1d9' }}>
+            <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#c9d1d9' }}>
               {totalVideos > 0 ? formatNumber(totalLikes / totalVideos) : '0'}
             </div>
           </div>
-          <div>
-            <div style={{ fontSize: '0.75rem', color: '#8b949e', marginBottom: '0.25rem' }}>
-              Average Comments per Video
+          <div style={{ padding: '0 1rem', borderLeft: '3px solid #30363d' }}>
+            <div style={{ fontSize: '0.7rem', color: '#8b949e', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>
+              Avg Comments / Video
             </div>
-            <div style={{ fontSize: '1.25rem', fontWeight: 600, color: '#c9d1d9' }}>
+            <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#c9d1d9' }}>
               {totalVideos > 0 ? formatNumber(totalComments / totalVideos) : '0'}
             </div>
           </div>
-          <div>
-            <div style={{ fontSize: '0.75rem', color: '#8b949e', marginBottom: '0.25rem' }}>
-              Total Engagement
+          <div style={{ padding: '0 1rem', borderLeft: '3px solid #30363d' }}>
+            <div style={{ fontSize: '0.7rem', color: '#8b949e', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>
+              Gross Engagement
             </div>
-            <div style={{ fontSize: '1.25rem', fontWeight: 600, color: '#c9d1d9' }}>
+            <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#c9d1d9' }}>
               {formatNumber(totalLikes + totalComments)}
             </div>
           </div>
