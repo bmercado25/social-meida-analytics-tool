@@ -25,6 +25,7 @@ export const PendingEmbeddings: React.FC = () => {
   const [editingData, setEditingData] = useState<PendingEmbedding | null>(null);
   const [selectedVideoId, setSelectedVideoId] = useState<string>('');
   const [assigningId, setAssigningId] = useState<string | null>(null);
+  const [previewData, setPreviewData] = useState<PendingEmbedding | null>(null);
 
   useEffect(() => {
     fetchData();
@@ -242,10 +243,6 @@ export const PendingEmbeddings: React.FC = () => {
             justifyContent: 'center',
             zIndex: 1000,
             padding: '1.5rem',
-          }}
-          onClick={() => {
-            setEditingId(null);
-            setEditingData(null);
           }}
         >
           <div
@@ -471,6 +468,86 @@ export const PendingEmbeddings: React.FC = () => {
         </div>
       )}
 
+      {/* Script Preview Modal */}
+      {previewData && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.85)',
+            backdropFilter: 'blur(6px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1100,
+            padding: '1.5rem',
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: '#161b22',
+              borderRadius: '12px',
+              width: '100%',
+              maxWidth: '700px',
+              maxHeight: '80vh',
+              display: 'flex',
+              flexDirection: 'column',
+              boxShadow: '0 24px 48px rgba(0, 0, 0, 0.6)',
+              border: '1px solid #30363d',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              style={{
+                padding: '1.5rem 2rem',
+                borderBottom: '1px solid #30363d',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 600, color: '#f0f6fc' }}>
+                Script Preview
+              </h3>
+              <button
+                onClick={() => setPreviewData(null)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '2rem',
+                  cursor: 'pointer',
+                  color: '#8b949e',
+                  padding: '0.25rem',
+                  lineHeight: 0.5,
+                  transition: 'color 0.2s'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.color = '#c9d1d9'}
+                onMouseLeave={(e) => e.currentTarget.style.color = '#8b949e'}
+              >
+                ×
+              </button>
+            </div>
+            <div 
+              style={{ 
+                padding: '2rem', 
+                overflow: 'auto', 
+                flex: 1, 
+                whiteSpace: 'pre-wrap', 
+                color: '#c9d1d9', 
+                fontSize: '1.1rem', 
+                lineHeight: '1.6',
+                backgroundColor: '#0d1117'
+              }}
+            >
+              {previewData.script || 'No script content available.'}
+            </div>
+          </div>
+        </div>
+      )}
+
       {embeddings.length === 0 ? (
         <div
           style={{
@@ -561,6 +638,24 @@ export const PendingEmbeddings: React.FC = () => {
                   )}
                 </div>
                 <div style={{ display: 'flex', gap: '0.5rem', marginLeft: '1rem' }}>
+                  <button
+                    onClick={() => setPreviewData(embedding)}
+                    title="Preview Script"
+                    style={{
+                      padding: '0.5rem 1rem',
+                      backgroundColor: '#21262d',
+                      color: '#c9d1d9',
+                      border: '1px solid #30363d',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                      fontSize: '0.875rem',
+                      transition: 'all 0.2s',
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#30363d'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#21262d'}
+                  >
+                    Preview
+                  </button>
                   <button
                     onClick={() => handleEdit(embedding)}
                     title="Edit"

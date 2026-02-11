@@ -273,7 +273,6 @@ export const VideoEmbeddingsEditor: React.FC<VideoEmbeddingsEditorProps> = ({
           zIndex: 1000,
           padding: '1.5rem',
         }}
-        onClick={onClose}
       >
         <div
           style={{
@@ -460,7 +459,6 @@ export const VideoEmbeddingsEditor: React.FC<VideoEmbeddingsEditorProps> = ({
         zIndex: 1000,
         padding: '1.5rem',
       }}
-      onClick={onClose}
     >
       <div
         style={{
@@ -725,7 +723,6 @@ export const VideoEmbeddingsEditor: React.FC<VideoEmbeddingsEditorProps> = ({
             zIndex: 2000,
             padding: '1rem',
           }}
-          onClick={() => setShowJsonPreview(false)}
         >
           <div
           style={{
