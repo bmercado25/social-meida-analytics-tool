@@ -144,7 +144,7 @@ export const sendChatMessage = async (
 
     // Call OpenAI
     const completion = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-4o-mini',
       messages,
       temperature: 0.7,
       max_tokens: 2048,
